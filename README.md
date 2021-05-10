@@ -4,7 +4,9 @@ Basic backend. It provides the API to be accessed by frontends.
 
 Designed to follow the closest as possible the JSON version of [Delft-FEWS API](https://publicwiki.deltares.nl/display/FEWSDOC/FEWS+PI+REST+Web+Service) so that they are exchangeable.
 
-Developed using Django REST framework on Python 3.8 Linux. Also tested on Python 3.7.6 Windows 10.
+Current implementation available at [https://hydro-web.herokuapp.com/](https://hydro-web.herokuapp.com/).
+
+Developed using Django REST framework on Python 3.8.8 Linux. Also tested on Python 3.7.6 Windows 10.
 
 ## Endpoints already implemented
 
