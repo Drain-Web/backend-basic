@@ -40,18 +40,14 @@ class SystemInformation(models.Model):
     class Meta:
         abstract = True
 
-    def __str__(this):
-        return {
-            "name": name
-        }
-
 
 # ### Create your meta models level 2 here ########################################################################### #
 
 class Map(models.Model):
-    geoDatum = models.CharField(max_length=10, default='WGS 1984')
-    projection = models.CharField(max_length=50, default='web_mercator')
-    defaultExtent = models.EmbeddedField(model_container=MapExtent)
+    # name = models.CharField(max_length=50, null=True)
+    geoDatum = models.CharField(max_length=10, default='WGS 1984', null=True)
+    projection = models.CharField(max_length=50, default='web_mercator', null=True)
+    defaultExtent = models.EmbeddedField(model_container=MapExtent, null=True)
 
     class Meta:
         abstract = True
@@ -60,6 +56,7 @@ class Map(models.Model):
 # ### Create your models here ######################################################################################## #
 
 class Filter(models.Model):
+    id = models.IntegerField(default=1, primary_key=True)
     name = models.CharField(max_length=70, default='')
     mapExtent = models.EmbeddedField(model_container=MapExtent)
     boundary = models.EmbeddedField(model_container=Boundary, null=True)
@@ -76,6 +73,7 @@ class LocationSets(models.Model):
 
 
 class Region(models.Model):
+    # name = models.CharField(max_length=70, default='')
     systemInformation = models.EmbeddedField(model_container=SystemInformation)
     datetime = models.EmbeddedField(model_container=DatetimeDefinition)
     map = models.EmbeddedField(model_container=Map, null=True)

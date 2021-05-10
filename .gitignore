@@ -1,4 +1,2 @@
-*__pycache__/
-*.py[cod]
-
-crud/migrations/*
+api_rest/__pycache__/*
+crud/__pycache__/*
