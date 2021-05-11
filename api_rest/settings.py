@@ -94,7 +94,7 @@ DATABASES = {
         'NAME': 'missouriRiverTributariesDB'
     }
 }
-MongoClient.HOST = "mongodb+srv://adlz:LuigiMario@cluster0.4kqxi.mongodb.net/"
+MongoClient.HOST = "mongodb+srv://guest:noPass@cluster0.4kqxi.mongodb.net/"
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators

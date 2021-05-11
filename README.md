@@ -31,6 +31,30 @@ Returns all available filters in the database.
 Return the filter that has id=*<id\>*. Id is an integer.
 
 
+## Deploying
+
+As a typical Django project, we need to run:
+
+	$ python manage.py makemigrations
+	$ python manage.py migrate
+
+To set up our database to match the designed models.
+
+But just before running the `migrate` the line:
+
+	isMigrate = False
+
+in the file `crud/models.py` must change to: 
+
+	isMigrate = True
+
+and, the line:
+
+	MongoClient.HOST = "mongodb+srv://guest:noPass@cluster0.4kqxi.mongodb.net/"
+
+is the file `api_rest/settings.py` so that the user `guest` (and its respective password) is changed to an user with writing permissions in the target database.
+
+
 ## Populating database
 
 In *crud/fixtures/* we have the files to populate the database with some mock data for development and demonstration purposes.
