@@ -14,13 +14,20 @@ The packages required by this project are described in the classical *requiremen
 
 It is highly recommended that you create a new python environment to work in your development. Multiple python package managers provide such a functionality.
 
-If you are using pip, the steps for (1) creating a new environment named `backend-basic_fedora`, (2) entering the environment * and (3) installing the packages needed are:
+If you are using only **venv**, the steps for (1) creating a new environment named `backend-basic_fedora`, (2) entering the environment * and (3) installing the packages needed are:
 
     $ python -m venv backend-basic_fedora
-		$ source [folder_path]/venvs/backend-basic_fedora/bin/activate
-		(backend-basic_fedora) $ pip install -r requirements.txt
+	$ source [folder_path]/venvs/backend-basic_fedora/bin/activate
+	(backend-basic_fedora) $ pip install -r requirements.txt
 
-*: second step is given for Linux environements. Windows and Mac OS may have different command styles
+*: second step is given for Linux environments. Windows and Mac OS may have different command styles
+
+If you are using **conda** and **pip** on Linux, the same steps would be:
+
+    $ conda create -n django_frontend_3.8 python=3.8
+    $ conda activate django_frontend_3.8
+    $ while read requirement; do conda install --yes $requirement; done < requirements.txt
+    $ pip install -r requirements.txt
 
 ## Endpoints already implemented
 
@@ -75,10 +82,9 @@ In *crud/fixtures/* we have the files to populate the database with some mock da
 
 To keep the database up to date, it is recommended the execution of the following commands:
 
-	$ python migrate.py flush
-    $ python migrate.py loaddata crud/fixutures/crud_fixture.json
-    $ python migrate.py loaddata crud/fixtures/
-
+$ python migrate.py flush
+$ python migrate.py loaddata crud/fixutures/crud_fixture.json
+$ python migrate.py loaddata crud/fixtures/
 
 
 ## About this development branch version
