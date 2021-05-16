@@ -8,6 +8,20 @@ Current implementation available at [https://hydro-web.herokuapp.com/](https://h
 
 Developed using Django REST framework on Python 3.8.8 Linux. Also tested on Python 3.7.6 Windows 10.
 
+## Setting up basic dev environment
+
+The packages required by this project are described in the classical *requirements.txt* file.
+
+It is highly recommended that you create a new python environment to work in your development. Multiple python package managers provide such a functionality.
+
+If you are using pip, the steps for (1) creating a new environment named `backend-basic_fedora`, (2) entering the environment * and (3) installing the packages needed are:
+
+    $ python -m venv backend-basic_fedora
+		$ source [folder_path]/venvs/backend-basic_fedora/bin/activate
+		(backend-basic_fedora) $ pip install -r requirements.txt
+
+*: second step is given for Linux environements. Windows and Mac OS may have different command styles
+
 ## Endpoints already implemented
 
 They are defined in the *api_rest/urls.py* file.
@@ -44,7 +58,7 @@ But just before running the `migrate` the line:
 
 	isMigrate = False
 
-in the file `crud/models.py` must change to: 
+in the file `crud/models.py` must change to:
 
 	isMigrate = True
 
