@@ -2,6 +2,7 @@ from djongo import models
 
 # ### Create your meta models level 1 here ########################################################################### #
 # All meta models have the class Meta with the sole attribute abstract = True
+# For some reason, the meta models should also have an ID, despite of us not really using them
 
 isMigrate = False
 
@@ -40,9 +41,22 @@ class MapExtent(models.Model):
         abstract = isMigrate
 
 
+class Parameter(models.Model):
+    id = models.CharField(max_length=20, primary_key=True)  # T.obs.mean,
+    name = models.CharField(max_length=70)
+
+
 class SystemInformation(models.Model):
     id = models.IntegerField(default=1, primary_key=True)
     name = models.CharField(max_length=50, default='DEFAULT TITLE')
+
+    class Meta:
+        abstract = isMigrate
+
+
+class TimeseriesTimestep(models.Model):
+    id = models.IntegerField(default=1, primary_key=True)
+    unit = models.CharField(max_length=30, default='nonequidistant')
 
     class Meta:
         abstract = isMigrate
@@ -56,6 +70,30 @@ class Map(models.Model):
     geoDatum = models.CharField(max_length=10, default='WGS 1984', null=True)
     projection = models.CharField(max_length=50, default='web_mercator', null=True)
     defaultExtent = models.EmbeddedField(model_container=MapExtent, null=True)
+
+    class Meta:
+        abstract = isMigrate
+
+
+class TimeseriesEvent(models.Model):
+    id = models.IntegerField(default=1, primary_key=True)
+    date = models.CharField(max_length=10, default='YYYY-MM-DD')
+    time = models.CharField(max_length=8, default='00:00:00')
+    value = models.FloatField()
+    flag = models.IntegerField(default=0)
+
+    class Meta:
+        abstract = isMigrate
+
+
+class TimeseriesHeader(models.Model):
+    id = models.IntegerField(default=1, primary_key=True)
+    units = models.CharField(max_length=10, default='')
+    missVal = models.FloatField()
+    type = models.CharField(max_length=20, default='')
+    parameterId = models.CharField(max_length=20, default='')
+    stationName = models.CharField(max_length=20, default='')
+    timeStep = models.EmbeddedField(model_container=TimeseriesTimestep, null=True)
 
     class Meta:
         abstract = isMigrate
@@ -89,5 +127,5 @@ class Region(models.Model):
 
 class Timeseries(models.Model):
     name = models.CharField(max_length=70, default='')
-    description = models.CharField(max_length=100, default='')
-    unit = models.CharField(max_length=10, default='')
+    header = models.EmbeddedField(model_container=TimeseriesHeader)
+    events = models.ArrayField(model_container=TimeseriesEvent)

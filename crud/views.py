@@ -1,9 +1,9 @@
 from django.shortcuts import render
 
-from crud.models import Filter, Location, Region
+from crud.models import Filter, Location, Region, Timeseries
 from rest_framework.decorators import api_view
 from django.http.response import JsonResponse
-from crud.serializers import FilterSerializer, LocationSerializer, RegionSerializer
+from crud.serializers import FilterSerializer, LocationSerializer, RegionSerializer, TimeseriesSerializer
 from rest_framework import status
 
 # Create your views here.
@@ -45,3 +45,13 @@ def region(request):
         region = Region.objects.first()
         region_serializer = RegionSerializer(region, many=False)
         return JsonResponse(region_serializer.data, safe=False)
+
+# ## TIMESERIES ###################################################################################################### #
+
+@api_view(['GET'])
+def timeseries_list(request):
+
+    if request.method == 'GET':
+        all_timeseries = Timeseries.objects.all()
+        timeseries_serializer = TimeseriesSerializer(all_timeseries, many=True)
+        return JsonResponse(timeseries_serializer.data, safe=False)

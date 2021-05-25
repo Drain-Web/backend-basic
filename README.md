@@ -51,6 +51,17 @@ Returns all available filters in the database.
 
 Return the filter that has id=*<id\>*. Id is an integer.
 
+### http://.../v1/timeseries
+
+List all timeseries in the database.
+
+*TODO:* These timeseries should be provided **without** the *events* fields.
+
+### http://.../v1/timeseries/*<attributes\>*
+
+Retrieve one entire timeseries with given *<attributes\>*, including the *events* field.
+
+*TODO:* Not implemented yet. 
 
 ## Deploying
 
@@ -75,16 +86,21 @@ and, the line:
 
 is the file `api_rest/settings.py` so that the user `guest` (and its respective password) is changed to an user with writing permissions in the target database.
 
+### Error: Not implemented alter command for SQL ALTER TABLE "..." ...
+
+If you get this error after changing a *Collection* structure, try using the command:
+
+    $ python manage.py migrate --fake crud [migration_id]
+
+In which ```migration_id``` can be found in the aforementioned error message in:
+
+    Running migrations:
+     Applying crud.[migration_id]...
+
 
 ## Populating database
 
-In *crud/fixtures/* we have the files to populate the database with some mock data for development and demonstration purposes.
-
-To keep the database up to date, it is recommended the execution of the following commands:
-
-$ python migrate.py flush
-$ python migrate.py loaddata crud/fixutures/crud_fixture.json
-$ python migrate.py loaddata crud/fixtures/
+Please refer to the *README.md* in *crud/fixtures/*.
 
 
 ## About this development branch version

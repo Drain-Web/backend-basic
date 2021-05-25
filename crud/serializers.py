@@ -1,5 +1,7 @@
 from rest_framework import serializers
 from crud.models import Boundary, DatetimeDefinition, Filter, Location, Map, MapExtent, Region, SystemInformation
+from crud.models import Timeseries, TimeseriesEvent, TimeseriesHeader, TimeseriesTimestep
+
 
 class BoundarySerializer(serializers.ModelSerializer):
     polygon = serializers.JSONField()
@@ -39,9 +41,6 @@ class LocationSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-
-
-
 class MapSerializer(serializers.ModelSerializer):
     defaultExtent = MapExtentSerializer(many=False)
 
@@ -49,6 +48,8 @@ class MapSerializer(serializers.ModelSerializer):
         model = Map
         fields = '__all__'
 
+
+# ## REGION ########################################################################################################## #
 
 class SystemInformationSerializer(serializers.ModelSerializer):
 
@@ -64,4 +65,46 @@ class RegionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Region
+        fields = '__all__'
+
+# ## TIMESERIES ###################################################################################################### #
+
+class TimeseriesEventSerializer(serializers.ModelSerializer):
+    date = serializers.CharField()
+    time = serializers.CharField()
+    value = serializers.FloatField()
+    flag = serializers.IntegerField()
+
+    class Meta:
+        model = TimeseriesEvent
+        fields = ('date', 'time', 'value', 'flag')
+
+
+class TimeseriesTimestepSerializer(serializers.ModelSerializer):
+    unit = serializers.CharField()
+
+    class Meta:
+        model = TimeseriesTimestep
+        fields = ('unit', )
+
+
+class TimeseriesHeaderSerializer(serializers.ModelSerializer):
+    timeStep = TimeseriesTimestepSerializer(many=False)
+    units = serializers.CharField()
+    missVal = serializers.FloatField()
+    type = serializers.CharField()
+    parameterId = serializers.CharField()
+    stationName = serializers.CharField()
+
+    class Meta:
+        model = TimeseriesHeader
+        fields = ('timeStep', 'units', 'missVal', 'type', 'parameterId', 'stationName')
+
+
+class TimeseriesSerializer(serializers.ModelSerializer):
+    header = TimeseriesHeaderSerializer(many=False)
+    events = TimeseriesEventSerializer(many=True)
+
+    class Meta:
+        model = Timeseries
         fields = '__all__'
