@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from crud.models import Boundary, DatetimeDefinition, Filter, Location, Map, MapExtent, Region, SystemInformation
-from crud.models import Timeseries, TimeseriesEvent, TimeseriesHeader, TimeseriesTimestep
+from crud.models import Timeseries, TimeseriesEvent, TimeseriesTimestep
 
 
 class BoundarySerializer(serializers.ModelSerializer):
@@ -87,7 +87,7 @@ class TimeseriesTimestepSerializer(serializers.ModelSerializer):
         model = TimeseriesTimestep
         fields = ('unit', )
 
-
+'''
 class TimeseriesHeaderSerializer(serializers.ModelSerializer):
     timeStep = TimeseriesTimestepSerializer(many=False)
     units = serializers.CharField()
@@ -99,10 +99,14 @@ class TimeseriesHeaderSerializer(serializers.ModelSerializer):
     class Meta:
         model = TimeseriesHeader
         fields = ('timeStep', 'units', 'missVal', 'type', 'parameterId', 'stationName')
+'''
 
 
 class TimeseriesSerializer(serializers.ModelSerializer):
-    header = TimeseriesHeaderSerializer(many=False)
+    # TODO: replace by function
+    # TODO: e.g. https://stackoverflow.com/questions/22958058/how-to-change-field-name-in-django-rest-framework
+    # header = TimeseriesHeaderSerializer(many=False)
+
     events = TimeseriesEventSerializer(many=True)
 
     class Meta:

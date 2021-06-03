@@ -1,8 +1,17 @@
 from djongo import models
 
+# ### Overall notes ################################################################################################## #
+
+# Attributes are named in camelCase by default (following Delft-FEWS pattern).
+# When an attribute has a underline, it is expected to be changed in the Serializer.
+# e.g. field_someThing = models.IntegerField(...) should be output as field = {someThing: models.IntegerField(...)}
+
+
 # ### Create your meta models level 1 here ########################################################################### #
+
 # All meta models have the class Meta with the sole attribute abstract = True
 # For some reason, the meta models should also have an ID, despite of us not really using them
+
 
 isMigrate = False
 
@@ -64,6 +73,16 @@ class TimeseriesTimestep(models.Model):
 
 # ### Create your meta models level 2 here ########################################################################### #
 
+class Location(models.Model):
+    id = models.CharField(max_length=100, primary_key=True)
+    name = models.CharField(max_length=70, default='')
+    x = models.FloatField()
+    y = models.FloatField()
+
+    class Meta:
+        abstract = isMigrate
+
+
 class Map(models.Model):
     id = models.IntegerField(default=1, primary_key=True)
     # name = models.CharField(max_length=50, null=True)
@@ -85,7 +104,7 @@ class TimeseriesEvent(models.Model):
     class Meta:
         abstract = isMigrate
 
-
+'''
 class TimeseriesHeader(models.Model):
     id = models.IntegerField(default=1, primary_key=True)
     units = models.CharField(max_length=10, default='')
@@ -94,24 +113,33 @@ class TimeseriesHeader(models.Model):
     parameterId = models.CharField(max_length=20, default='')
     stationName = models.CharField(max_length=20, default='')
     timeStep = models.EmbeddedField(model_container=TimeseriesTimestep, null=True)
+    location = models.ForeignKey(
+        Location,
+        on_delete=models.DO_NOTHING,
+        null=True
+    )
 
     class Meta:
         abstract = isMigrate
+'''
 
 
 # ### Create your models here ######################################################################################## #
 
 class Filter(models.Model):
-    id = models.IntegerField(default=1, primary_key=True)
-    name = models.CharField(max_length=70, default='')
+    # id = models.IntegerField(default=1, primary_key=True)
+    id = models.CharField(max_length=100, primary_key=True)
+    description = models.CharField(max_length=100, default='')
     mapExtent = models.EmbeddedField(model_container=MapExtent)
     boundary = models.EmbeddedField(model_container=Boundary, null=True)
+    location = models.ForeignKey(
+        Location,
+        on_delete=models.DO_NOTHING,
+        null=True
+    )
 
-
-class Location(models.Model):
-    name = models.CharField(max_length=70, default='')
-    x = models.FloatField()
-    y = models.FloatField()
+    class Meta:
+        abstract = False
 
 
 class LocationSets(models.Model):
@@ -126,6 +154,29 @@ class Region(models.Model):
 
 
 class Timeseries(models.Model):
-    name = models.CharField(max_length=70, default='')
-    header = models.EmbeddedField(model_container=TimeseriesHeader)
+    id = models.AutoField(primary_key=True)
+
+    # EmbeddedField was replaced by header_[fieldname] and they must be rebuild by serializers
+    # Justification:
+    # https://stackoverflow.com/questions/63494891/django-foreignkey-in-mongodbs-embeddedfield
+    # header = models.EmbeddedField(model_container=TimeseriesHeader, null=True)
+
+    # header: {...} in the Serializer
+    header_units = models.CharField(max_length=10, default='')
+    header_missVal = models.FloatField()
+    header_type = models.CharField(max_length=20, default='')
+    header_parameterId = models.CharField(max_length=20, default='')
+    header_stationName = models.CharField(max_length=20, default='')
+    header_location = models.ForeignKey(
+        Location,
+        on_delete=models.DO_NOTHING,
+        null=True
+    )
+    header_timeStep_unit = models.CharField(max_length=10, default='')
+
+    # external references
     events = models.ArrayField(model_container=TimeseriesEvent)
+    filter_set = models.ArrayReferenceField(
+        to=Filter,
+        on_delete=models.DO_NOTHING
+    )

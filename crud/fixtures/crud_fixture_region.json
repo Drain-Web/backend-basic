@@ -1,0 +1,25 @@
+[
+ {
+  "model": "crud.region",
+  "fields": {
+   "systemInformation": {
+    "name": "Missouri River Tributaries"
+   },
+   "map": {
+    "geoDatum": "WGS 1984",
+    "projection": "web_mercator",
+    "defaultExtent": {
+     "name": "All basins",
+     "left": -100,
+     "right": -96.3,
+     "top": 43,
+     "bottom": 41.3
+    }
+   },
+   "datetime": {
+    "timezone": "GMT",
+    "datetimeFormat": "yyyy-MM-dd HH:mm"
+   }
+  }
+ }
+]

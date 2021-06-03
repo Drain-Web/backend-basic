@@ -1,0 +1,38 @@
+{
+	"general": {
+		"name": "Elkhorn River Basin",
+		"boundary": {
+			"polygon": []
+		},
+		"mapExtent":{
+			"top": 43.0,
+			"bottom": 40.5,
+			"left": -100.0,
+			"right": -95.5
+		}
+	},
+	"half1": {
+		"name": "Elkhorn River Half 1",
+		"boundary": {
+			"polygon": []
+		},
+		"mapExtent":{
+			"top": 43.0,
+			"bottom": 40.5,
+			"left": -100.0,
+			"right": -95.5
+		}
+	},
+	"half2": {
+		"name": "Elkhorn River Half 2",
+		"boundary": {
+			"polygon": []
+		},
+		"mapExtent":{
+			"top": 43.0,
+			"bottom": 40.5,
+			"left": -100.0,
+			"right": -95.5
+		}
+	}
+}

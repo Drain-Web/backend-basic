@@ -8,7 +8,7 @@
     "stationName" : "Alfa Station",
     "timeStep": {
      "unit": "nonequidistant"
-    },
+    },""
     "missVal" : -999.0
    },
    "events":[

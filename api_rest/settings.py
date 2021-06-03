@@ -88,10 +88,11 @@ REST_FRAMEWORK = {
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
+# 'NAME': 'missouriRiverTributariesDB'
 DATABASES = {
     'default': {
         'ENGINE': 'djongo',
-        'NAME': 'missouriRiverTributariesDB'
+        'NAME': 'missouriRiverTributariesDBdev'
     }
 }
 MongoClient.HOST = "mongodb+srv://guest:noPass@cluster0.4kqxi.mongodb.net/"
