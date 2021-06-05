@@ -104,25 +104,6 @@ class TimeseriesEvent(models.Model):
     class Meta:
         abstract = isMigrate
 
-'''
-class TimeseriesHeader(models.Model):
-    id = models.IntegerField(default=1, primary_key=True)
-    units = models.CharField(max_length=10, default='')
-    missVal = models.FloatField()
-    type = models.CharField(max_length=20, default='')
-    parameterId = models.CharField(max_length=20, default='')
-    stationName = models.CharField(max_length=20, default='')
-    timeStep = models.EmbeddedField(model_container=TimeseriesTimestep, null=True)
-    location = models.ForeignKey(
-        Location,
-        on_delete=models.DO_NOTHING,
-        null=True
-    )
-
-    class Meta:
-        abstract = isMigrate
-'''
-
 
 # ### Create your models here ######################################################################################## #
 
@@ -155,11 +136,6 @@ class Region(models.Model):
 
 class Timeseries(models.Model):
     id = models.AutoField(primary_key=True)
-
-    # EmbeddedField was replaced by header_[fieldname] and they must be rebuild by serializers
-    # Justification:
-    # https://stackoverflow.com/questions/63494891/django-foreignkey-in-mongodbs-embeddedfield
-    # header = models.EmbeddedField(model_container=TimeseriesHeader, null=True)
 
     # header: {...} in the Serializer
     header_units = models.CharField(max_length=10, default='')

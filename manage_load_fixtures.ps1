@@ -15,7 +15,7 @@ python .\manage.py loaddata .\crud\fixtures\crud_fixture_locations.json
 echo ""
 
 echo "Inserting geo-event filters..."
-python .\manage.py loaddata .\crud\fixtures\crud_fixture_geoevts.json
+python .\manage.py loaddata .\crud\fixtures\crud_fixtureAuto_geoevts.json
 echo ""
 
 Get-ChildItem ".\crud\fixtures\crud_fixture_timeseries\" -Filter *.json | 
