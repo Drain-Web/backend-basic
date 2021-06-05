@@ -47,21 +47,32 @@ An endpoint with additional filters is yet to be implemented.
 
 Returns all available filters in the database.
 
+The filters returned don't have geojson polygon data associated to it.
+
+Should be used for listing available options only.
+
 ### http://.../v1/filter/*<id\>*
 
-Return the filter that has id=*<id\>*. Id is an integer.
+Return the filter with id=*<id\>*.
+
+It contains the geojson polygon data.
 
 ### http://.../v1/timeseries
 
-List all timeseries in the database.
+List all timeseries in the database that attend some parameters.
 
-*TODO:* These timeseries should be provided **without** the *events* fields.
+When only the mandatory parameter is given, only the metadata of the timeseries is returned. If additional parameters are given, the inner data is also provided.
 
-### http://.../v1/timeseries/*<attributes\>*
+Example: ```http://.../v1/timeseries/filter=alpha&location=beta```
 
-Retrieve one entire timeseries with given *<attributes\>*, including the *events* field.
+Mandatory parameter:
 
-*TODO:* Not implemented yet. 
+- **filter \*:** Filter Id
+
+Optional parameters:
+
+- **location:** Location Id.
+
 
 ## Deploying
 
