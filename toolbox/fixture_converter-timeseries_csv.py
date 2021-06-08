@@ -4,7 +4,7 @@ import pandas as pd
 import argparse
 import datetime
 import json
-import time
+import sys
 import os
 
 # ## INFO ############################################################################### #
@@ -16,7 +16,7 @@ import os
 # ## ARGS ############################################################################### #
 
 _parser = argparse.ArgumentParser(description='Process some integers.')
-_parser.add_argument('-request_filepath', metavar='request.json', type=str,
+_parser.add_argument('-request_filepath', metavar='request.json', type=str, required=True,
                      help='Path for the .json request file.')
 
 
@@ -27,7 +27,7 @@ DEFAULT_DATA_FLAG = "0"
 DEFAULT_DATA_DATE = "%Y-%m-%d"
 DEFAULT_DATA_TIME = "%H:%M:%S"
 DEBUG_LINES_PRINT = 10000
-IS_DEBUGGING = True
+IS_DEBUGGING = False
 
 
 # ## DEFS ############################################################################### #
@@ -219,7 +219,11 @@ if __name__ == "__main__":
     # get args
     _args = _parser.parse_args()
     with open(_args.request_filepath, "r") as _r_file:
-        _args_dict = json.load(_r_file)
+        try:
+            _args_dict = json.load(_r_file)
+        except json.decoder.JSONDecodeError as e:
+            print("Unable to read request file. Invalid .json structure.")
+            sys.exit("Error: {0}".format(e))
     del _parser, _args
 
     # convert all timeseries

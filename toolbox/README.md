@@ -31,6 +31,23 @@ Removes temporary files created after a success of ```fixture_converter-timeseri
 
 **TODO:** Implement it.
 
+### geojson\_precision\_reducer.py
+
+Reduces the precision of all float numbers in a ```.geojson``` file to a given number of decimal places.
+
+For polygons with many points, such reduction can be significant.
+
+**Example:**
+
+Given a ```.geojson``` file with the content:
+
+    [[-90.123456, 45.654321], [-91.000000, 45.555555]]
+
+It can be reduced to have its precision reduced to 3 decimal places, becoming:
+
+	[[-90.123, 45.654], [-91.000, 45.555]]
+
+
 ## Expected sequence of calls
 
 ### Setting up fixtures from .csv files
