@@ -106,7 +106,7 @@ class TimeseriesParameterSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'parameterType', 'unit', 'displayUnit', 'usesDatum', 'parameterGroup')
 
     def get_parameter_group_id(self, obj):
-        return obj.id
+        return obj.parameterGroup.id
 
 
 # ## TIMESERIES ###################################################################################################### #
@@ -135,7 +135,7 @@ class TimeseriesSerializerBase(serializers.ModelSerializer):
             "units": obj.header_units,
             "missVal": obj.header_missVal,
             "type": obj.header_type,
-            "parameterId": obj.header_parameterId,
+            "parameterId": obj.header_parameterId.id,
             "stationName": obj.header_stationName,
             "location_id": obj.header_location_id,
             "timeStep": {

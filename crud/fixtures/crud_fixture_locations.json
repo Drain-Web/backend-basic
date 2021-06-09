@@ -1,8 +1,8 @@
-[
+[usgs_06797500
  {
   "model": "crud.location",
   "fields": {
-   "id": 1,
+   "id": "usgs_06797500",
    "name": "Elkhorn River at Ewing, Nebr.",
    "x": -98.339,
    "y":  42.268
@@ -10,7 +10,7 @@
  }, {
   "model": "crud.location",
   "fields": {
-   "id": 2,
+   "id": "usgs_06799000",
    "name": "Elkhorn River at Norfolk, Nebr.",
    "x": -97.426,
    "y": 42.004
@@ -18,7 +18,7 @@
  }, {
   "model": "crud.location",
   "fields": {
-   "id": 3,
+   "id": "usgs_06799100",
    "name": "North Fork Elkhorn River near Pierce, Nebr.",
    "x": -97.478,
    "y":  42.148
@@ -26,7 +26,7 @@
  }, {
   "model": "crud.location",
   "fields": {
-   "id": 4,
+   "id": "usgs_06799315",
    "name": "Elkhorn River at Pilger, Nebr.",
    "x": -97.058,
    "y":  41.995
@@ -34,7 +34,7 @@
  }, {
   "model": "crud.location",
   "fields": {
-   "id": 5,
+   "id": "usgs_06799350",
    "name": "Elkhorn River at West Point, Nebr.",
    "x": -96.727,
    "y":  41.839
@@ -42,7 +42,7 @@
  }, {
   "model": "crud.location",
   "fields": {
-   "id": 6,
+   "id": "usgs_06799445",
    "name": "Logan Creek at Wakefield, Nebr.",
    "x": -96.862,
    "y":  42.277
@@ -50,7 +50,7 @@
  }, {
   "model": "crud.location",
   "fields": {
-   "id": 7,
+   "id": "usgs_06799500",
    "name": "Logan Creek near Uehling, Nebr.",
    "x": -96.522,
    "y":  41.713
@@ -58,7 +58,7 @@
  }, {
   "model": "crud.location",
   "fields": {
-   "id": 8,
+   "id": "usgs_06800000",
    "name": "Maple Creek near Nickerson, Nebr.",
    "x": -96.541,
    "y":  41.561
