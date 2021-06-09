@@ -108,22 +108,16 @@ class TimeseriesEvent(models.Model):
 # ### Create your models here ######################################################################################## #
 
 class Filter(models.Model):
-    # id = models.IntegerField(default=1, primary_key=True)
     id = models.CharField(max_length=100, primary_key=True)
     description = models.CharField(max_length=100, default='')
     mapExtent = models.EmbeddedField(model_container=MapExtent)
     boundary = models.EmbeddedField(model_container=Boundary, null=True)
-    location = models.ForeignKey(
-        Location,
-        on_delete=models.DO_NOTHING,
-        null=True
-    )
 
     class Meta:
         abstract = False
 
 
-class LocationSets(models.Model):
+class LocationSet(models.Model):
     name = models.CharField(max_length=70, default='')
 
 
@@ -134,6 +128,34 @@ class Region(models.Model):
     map = models.EmbeddedField(model_container=Map, null=True)
 
 
+class ParameterGroup(models.Model):
+    id = models.CharField(max_length=50, primary_key=True)
+    parameterType = models.CharField(
+        max_length=20,
+        choices=(('accumulative', 'Accumulative'),
+                 ('instantaneous', 'Instantaneous')))
+    unit = models.CharField(max_length=30, default='dimensionless')
+    valueResolution = models.FloatField()
+
+
+class TimeseriesParameter(models.Model):
+    id = models.CharField(max_length=50, primary_key=True)
+    name = models.CharField(max_length=100, default='')
+    shortName = models.CharField(max_length=50, default='')
+    parameterType = models.CharField(
+        max_length=20,
+        choices=(('accumulative', 'Accumulative'),
+                 ('instantaneous', 'Instantaneous')))
+    unit = models.CharField(max_length=30, default='dimensionless')
+    displayUnit = models.CharField(max_length=10, default='')
+    usesDatum = models.BooleanField(default=False)
+    parameterGroup = models.ForeignKey(
+        ParameterGroup,
+        on_delete=models.CASCADE,
+        null=False
+    )
+
+
 class Timeseries(models.Model):
     id = models.AutoField(primary_key=True)
 
@@ -141,11 +163,15 @@ class Timeseries(models.Model):
     header_units = models.CharField(max_length=10, default='')
     header_missVal = models.FloatField()
     header_type = models.CharField(max_length=20, default='')
-    header_parameterId = models.CharField(max_length=20, default='')
+    header_parameterId = models.ForeignKey(
+        TimeseriesParameter,
+        on_delete=models.CASCADE,
+        null=True
+    )
     header_stationName = models.CharField(max_length=20, default='')
     header_location = models.ForeignKey(
         Location,
-        on_delete=models.DO_NOTHING,
+        on_delete=models.CASCADE,
         null=True
     )
     header_timeStep_unit = models.CharField(max_length=10, default='')

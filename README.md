@@ -57,6 +57,10 @@ Return the filter with id=*<id\>*.
 
 It contains the geojson polygon data.
 
+### http://.../v1/parameters
+
+List all timeserie parameters and their general information.
+
 ### http://.../v1/timeseries
 
 List all timeseries in the database that attend some parameters.

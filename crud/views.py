@@ -1,12 +1,17 @@
 from django.shortcuts import render
 
-from crud.models import Filter, Location, Region, Timeseries
+from crud.models import Filter, Location, Region, Timeseries, TimeseriesParameter
 from rest_framework.decorators import api_view
 from django.http.response import JsonResponse
-from crud.serializers import FilterSerializer, LocationSerializer, RegionSerializer
+from crud.serializers import FilterSerializer, LocationSerializer, RegionSerializer, TimeseriesParameterSerializer
 from crud.serializers import FilterListItemSerializer, TimeseriesDatalessSerializer, TimeseriesDatafullSerializer
 from rest_framework import status
 
+# ## CONSTANTS ####################################################################################################### #
+
+API_VERSION = "1.25"
+
+# ## DEFS ############################################################################################################ #
 
 # Create your views here.
 
@@ -45,9 +50,23 @@ def location(request):
 def region(request):
 
     if request.method == 'GET':
-        region = Region.objects.first()
-        region_serializer = RegionSerializer(region, many=False)
+        region_obj = Region.objects.first()
+        region_serializer = RegionSerializer(region_obj, many=False)
         return JsonResponse(region_serializer.data, safe=False)
+
+
+# ## PARAMETERS ###################################################################################################### #
+
+@api_view(['GET'])
+def list_parameters(request):
+
+    all_ts_parameters = TimeseriesParameter.objects.all()
+    ts_parameters_serializer = TimeseriesParameterSerializer(all_ts_parameters, many=True)
+    ret_dict = {
+        "version": "1.25",
+        "timeSeriesParameters": ts_parameters_serializer.data
+    }
+    return JsonResponse(ret_dict, safe=False)
 
 
 # ## TIMESERIES ###################################################################################################### #

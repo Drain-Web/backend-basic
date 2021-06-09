@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from crud.models import Boundary, DatetimeDefinition, Filter, Location, Map, MapExtent, Region, SystemInformation
-from crud.models import Timeseries, TimeseriesEvent, TimeseriesTimestep
+from crud.models import Timeseries, TimeseriesEvent, TimeseriesTimestep, TimeseriesParameter
 
 
 class BoundarySerializer(serializers.ModelSerializer):
@@ -15,7 +15,7 @@ class DatetimeDefinitionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = DatetimeDefinition
-        fields = '__all__'
+        fields = ('timezone', 'datetimeFormat')
 
 
 class MapExtentSerializer(serializers.ModelSerializer):
@@ -64,7 +64,7 @@ class MapSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Map
-        fields = '__all__'
+        fields = ('defaultExtent', 'geoDatum', 'projection')
 
 
 # ## REGION ########################################################################################################## #
@@ -73,7 +73,7 @@ class SystemInformationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SystemInformation
-        fields = '__all__'
+        fields = ('name', )
 
 
 class RegionSerializer(serializers.ModelSerializer):
@@ -83,7 +83,30 @@ class RegionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Region
-        fields = '__all__'
+        fields = ("systemInformation", "datetime", "map")
+
+
+# ## TIMESERIES PARAMETERS ########################################################################################### #
+
+class TimeseriesParameterSerializer(serializers.ModelSerializer):
+    """
+
+    """
+
+    id = serializers.CharField()
+    name = serializers.CharField()
+    parameterType = serializers.CharField()
+    unit = serializers.CharField()
+    displayUnit = serializers.CharField()
+    usesDatum = serializers.BooleanField()
+    parameterGroup = serializers.SerializerMethodField('get_parameter_group_id')
+
+    class Meta:
+        model = TimeseriesParameter
+        fields = ('id', 'name', 'parameterType', 'unit', 'displayUnit', 'usesDatum', 'parameterGroup')
+
+    def get_parameter_group_id(self, obj):
+        return obj.id
 
 
 # ## TIMESERIES ###################################################################################################### #

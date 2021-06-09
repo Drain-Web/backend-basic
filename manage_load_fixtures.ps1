@@ -10,6 +10,14 @@ echo "Inserting region..."
 python .\manage.py loaddata .\crud\fixtures\crud_fixture_region.json
 echo ""
 
+echo "Inserting parameter groups..."
+python .\manage.py loaddata .\crud\fixtures\crud_fixture_parametergroups.json
+echo ""
+
+echo "Inserting parameters..."
+python .\manage.py loaddata .\crud\fixtures\crud_fixture_parameters.json
+echo ""
+
 echo "Inserting locations..."
 python .\manage.py loaddata .\crud\fixtures\crud_fixture_locations.json
 echo ""
