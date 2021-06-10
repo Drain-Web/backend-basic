@@ -131,14 +131,19 @@ def convert_one_csv_file(inp_fipa: str, out_fdpa: str, global_attr: dict,
                 cur_evt_df.shape, evt_id, base_filename), flush=True)
 
             # define geo-event filters
+            cur_geo_time_filters = []
             for cur_geo_filter in file_attr["geoFilters"]:
-                geo_time_filters.add("%s.%s" % (evt_id, cur_geo_filter))
+                cur_geo_time_filter = "%s.%s" % (evt_id, cur_geo_filter)
+                geo_time_filters.add(cur_geo_time_filter)
+                cur_geo_time_filters.append(cur_geo_time_filter)
+                del cur_geo_time_filter
 
             # convert extracted event into .json
             cur_entry_dict = convert_df_to_timeseries(cur_evt_df, global_attr,
                                                       file_attr["stationName"],
                                                       file_attr["location"],
-                                                      list(geo_time_filters))
+                                                      cur_geo_time_filters)
+            del cur_geo_time_filters
 
             # write json file
             cur_out_fina = "%s-%s.json" % (base_filename, evt_id)
