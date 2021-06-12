@@ -8,6 +8,10 @@ Current implementation available at [https://hydro-web.herokuapp.com/](https://h
 
 Developed using Django REST framework on Python 3.8.8 Linux. Also tested on Python 3.7.6 Windows 10.
 
+## Endpoints
+
+Please refer to the *README.md* in *crud/*.
+
 ## Setting up basic dev environment
 
 The packages required by this project are described in the classical *requirements.txt* file.
@@ -28,54 +32,6 @@ If you are using **conda** and **pip** on Linux, the same steps would be:
     $ conda activate django_frontend_3.8
     $ while read requirement; do conda install --yes $requirement; done < requirements.txt
     $ pip install -r requirements.txt
-
-## Endpoints already implemented
-
-They are defined in the *api_rest/urls.py* file.
-
-### http://.../v1/region
-
-Returns the first Region document. It is supposed to be the only one of the database.
-
-### http://.../v1/locations
-
-Returns all available locations.
-
-An endpoint with additional filters is yet to be implemented.
-
-### http://.../v1/filters
-
-Returns all available filters in the database.
-
-The filters returned don't have geojson polygon data associated to it.
-
-Should be used for listing available options only.
-
-### http://.../v1/filter/*<id\>*
-
-Return the filter with id=*<id\>*.
-
-It contains the geojson polygon data.
-
-### http://.../v1/parameters
-
-List all timeserie parameters and their general information.
-
-### http://.../v1/timeseries
-
-List all timeseries in the database that attend some parameters.
-
-When only the mandatory parameter is given, only the metadata of the timeseries is returned. If additional parameters are given, the inner data is also provided.
-
-Example: ```http://.../v1/timeseries/filter=alpha&location=beta```
-
-Mandatory parameter:
-
-- **filter \*:** Filter Id
-
-Optional parameters:
-
-- **location:** Location Id.
 
 
 ## Deploying
