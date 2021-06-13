@@ -11,31 +11,8 @@ from rest_framework import status
 
 API_VERSION = "1.25"
 
+
 # ## DEFS ############################################################################################################ #
-
-# Create your views here.
-
-@api_view(['GET'])
-def filter_detail(request, filter_id):
-
-    if request.method == 'GET':
-        try:
-            filt = Filter.objects.get(pk=filter_id)
-            filt_serializer = FilterSerializer(filt, many=False)
-            return JsonResponse(filt_serializer.data, safe=False)
-        except Filter.DoesNotExist:
-            return JsonResponse({'message': 'Filter with id "%s" not found.' % filter_id},
-                                status=status.HTTP_404_NOT_FOUND)
-
-
-@api_view(['GET'])
-def filter_list(request):
-    
-    if request.method == 'GET':
-        filts = Filter.objects.all()
-        filts_serializer = FilterListItemSerializer(filts, many=True)
-        return JsonResponse(filts_serializer.data, safe=False)
-
 
 @api_view(['GET'])
 def location(request):
@@ -55,6 +32,61 @@ def region(request):
         return JsonResponse(region_serializer.data, safe=False)
 
 
+# ## FILTERS ######################################################################################################### #
+
+@api_view(['GET'])
+def filter_detail(request, filter_id):
+    """
+    Gets a single filter object by its id. All information is retrieved.
+    """
+
+    if request.method == 'GET':
+        try:
+            filt = Filter.objects.get(pk=filter_id)
+            filt_serializer = FilterSerializer(filt, many=False)
+            return JsonResponse(filt_serializer.data, safe=False)
+        except Filter.DoesNotExist:
+            return JsonResponse({'message': 'Filter with id "%s" not found.' % filter_id},
+                                status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['GET'])
+def filter_list(request):
+    """
+    Lists all filters withouth their polygon data.
+    """
+
+    filts = Filter.objects.all()
+    filts_serializer = FilterListItemSerializer(filts, many=True)
+    return JsonResponse(filts_serializer.data, safe=False)
+
+
+@api_view(['GET'])
+def filter_list_by_querystring(request):
+    """
+    Lists all filters including (or not) polygons.
+    """
+
+    # default 'includePolygon': false
+    include_polygon = request.GET.get('includePolygon')
+    if (include_polygon is None) or (include_polygon.lower() == "false"):
+        filts = Filter.objects.all()
+        filts_serializer = FilterListItemSerializer(filts, many=True)
+        return JsonResponse(filts_serializer.data, safe=False)
+
+    # includes polygon
+    filts = Filter.objects.all()
+    filts_serializer = FilterSerializer(filts, many=True)
+
+    # built return object
+    ret_dict = {
+        "version": API_VERSION,
+        "locations": filts_serializer.data
+    }
+
+    return JsonResponse(ret_dict, safe=False)
+
+
 # ## PARAMETERS ###################################################################################################### #
 
 @api_view(['GET'])
@@ -63,7 +95,7 @@ def list_parameters(request):
     all_ts_parameters = TimeseriesParameter.objects.all()
     ts_parameters_serializer = TimeseriesParameterSerializer(all_ts_parameters, many=True)
     ret_dict = {
-        "version": "1.25",
+        "version": API_VERSION,
         "timeSeriesParameters": ts_parameters_serializer.data
     }
     return JsonResponse(ret_dict, safe=False)

@@ -1,3 +1,6 @@
+Set-StrictMode -Version latest
+$ErrorActionPreference = "Stop"
+
 echo "Ensure you are calling this script with the proper Python environment activated."
 echo ""
 
@@ -6,6 +9,15 @@ python .\manage.py flush
 echo ""
 
 <# #>
+
+echo "Inserting boundaries..."
+python .\manage.py loaddata .\crud\fixtures\crud_fixtureAuto_boundaries.json
+echo ""
+
+echo "Inserting map extents..."
+python .\manage.py loaddata .\crud\fixtures\crud_fixtureAuto_maps.json
+echo ""
+
 echo "Inserting region..."
 python .\manage.py loaddata .\crud\fixtures\crud_fixture_region.json
 echo ""
@@ -23,7 +35,7 @@ python .\manage.py loaddata .\crud\fixtures\crud_fixture_locations.json
 echo ""
 
 echo "Inserting geo-event filters..."
-python .\manage.py loaddata .\crud\fixtures\crud_fixtureAuto_geoevts.json
+python .\manage.py loaddata .\crud\fixtures\crud_fixtureAuto_geoevents.json
 echo ""
 
 Get-ChildItem ".\crud\fixtures\crud_fixture_timeseries\" -Filter *.json | 

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from crud.models import Boundary, DatetimeDefinition, Filter, Location, Map, MapExtent, Region, SystemInformation
+from crud.models import Boundary, DatetimeDefinition, Filter, Location, Map, Region, SystemInformation
 from crud.models import Timeseries, TimeseriesEvent, TimeseriesTimestep, TimeseriesParameter
 
 
@@ -18,11 +18,13 @@ class DatetimeDefinitionSerializer(serializers.ModelSerializer):
         fields = ('timezone', 'datetimeFormat')
 
 
+'''
 class MapExtentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = MapExtent
         fields = ('name', 'top', 'bottom', 'left', 'right')
+'''
 
 
 class FilterListItemSerializer(serializers.ModelSerializer):
@@ -33,7 +35,9 @@ class FilterListItemSerializer(serializers.ModelSerializer):
 
     id = serializers.CharField()
     description = serializers.CharField()
-    mapExtent = MapExtentSerializer(many=False)
+
+    # TODO: bellow
+    # mapExtent = MapExtentSerializer(many=False)
 
     class Meta:
         model = Filter
@@ -44,7 +48,8 @@ class FilterSerializer(serializers.ModelSerializer):
     """
     Filter element returned by single-element search.
     """
-    mapExtent = MapExtentSerializer(many=False)
+    # TODO: bellow
+    # mapExtent = MapExtentSerializer(many=False)
     boundary = BoundarySerializer(many=False)
 
     class Meta:
@@ -60,7 +65,8 @@ class LocationSerializer(serializers.ModelSerializer):
 
 
 class MapSerializer(serializers.ModelSerializer):
-    defaultExtent = MapExtentSerializer(many=False)
+    # TODO: bellow
+    # defaultExtent = MapExtentSerializer(many=False)
 
     class Meta:
         model = Map

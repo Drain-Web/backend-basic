@@ -2,6 +2,7 @@ from typing import Union
 import argparse
 import datetime
 import json
+import os
 
 # ## INFO ############################################################################### #
 
@@ -23,13 +24,53 @@ _parser.add_argument('-geofilters_filepath', metavar='geofilters.json', type=str
 _parser.add_argument('-geoevents_list_filepath', metavar='crud_prefixture_geoevts.json',
                      help='File created by "fixture_converter-timeseries_csv.py".',
                      type=str, required=True)
-_parser.add_argument('-geoevents_fixture_filepath', metavar='crud_fixture_geoevts.json',
-                     help='File to be created as output.', type=str, required=True)
+_parser.add_argument('-output_folderpath', metavar='/some/folder_path/',
+                     help='Folder path in which output files will be created as output.',
+                     type=str, required=True)
 
 # ## CONS ############################################################################### #
 
+OUT_GEOFILTERS_FIPA = "crud_fixtureAuto_geoevents.json"
+OUT_BOUNDARIES_FIPA = "crud_fixtureAuto_boundaries.json"
+OUT_MAPS_FIPA = "crud_fixtureAuto_maps.json"
+
+GEOFILTERS_DB_COLLECTION = "crud.crud.filter"
+BOUNDARIES_DB_COLLECTION = "crud.boundary"
+MAPS_DB_COLLECTION = "crud.map"
+
 
 # ## DEFS ############################################################################### #
+
+def generate_boundaries_and_maps_dicts(geo_filter_id: str, geo_filter_dict: dict) -> \
+        Union[tuple, None]:
+    """
+
+    :param geo_filter_id:
+    :param geo_filter_dict:
+    :return: Fixture dictionary for boundary, fixture dictionary for map extent
+    """
+
+    # build fixture for boundary
+    ret_boundary_dict = {
+        "model": BOUNDARIES_DB_COLLECTION,
+        "fields": {
+            "id": geo_filter_id,
+            "name": geo_filter_dict["name"]
+        }
+    }
+    ret_boundary_dict["fields"].update(geo_filter_dict["boundary"])
+
+    # build fixture for map extent
+    ret_map_dict = {
+        "model": MAPS_DB_COLLECTION,
+        "fields": {
+            "id": geo_filter_id,
+        }
+    }
+    ret_map_dict["fields"].update(geo_filter_dict["map"])
+
+    return ret_boundary_dict, ret_map_dict
+
 
 def generate_geoevent_dict(geo_evt_id: str, request_info: dict, geo_filters: dict) -> \
         Union[dict, None]:
@@ -65,14 +106,15 @@ def generate_geoevent_dict(geo_evt_id: str, request_info: dict, geo_filters: dic
         return None
 
     # build output object
+    geo_filter_id = geo_evt_id.split(".")[1]
     ret_dict = {
         "model": "crud.filter",
         "fields": {
             "id": geo_evt_id,
             "description": "%s @ %s" % (evt_filter_dict["filter_name"],
                                         geo_filter_dict["name"]),
-            "boundary": geo_filter_dict["boundary"],
-            "mapExtent": geo_filter_dict["mapExtent"]
+            "boundary": geo_filter_id,
+            "map": geo_filter_id
         }
     }
     print(" Building %s + %s" % (evt_filter_id, geo_filter_id))
@@ -95,10 +137,29 @@ if __name__ == "__main__":
         _geoflt_dict = json.load(_r_file)
     with open(_args.geoevents_list_filepath, "r") as _r_file:
         _geoevt_list = json.load(_r_file)
-    _geoevt_fixture_fipa = _args.geoevents_fixture_filepath
+    _output_fdpa = _args.output_folderpath
     del _parser, _args
 
-    # build fixtures
+    # build map extent and boundary fixtures
+    _all_boundary_dicts, _all_map_dicts = [], []
+    for _cur_geoflt_id, _cur_geoflt_dict in _geoflt_dict.items():
+        _cur_boundary_dict, _cur_mapextent_dict = generate_boundaries_and_maps_dicts(
+            _cur_geoflt_id, _cur_geoflt_dict)
+        _all_boundary_dicts.append(_cur_boundary_dict)
+        _all_map_dicts.append(_cur_mapextent_dict)
+        del _cur_geoflt_id, _cur_geoflt_dict, _cur_boundary_dict, _cur_mapextent_dict
+
+    # write map extent and boundary fixture files
+    _out_bdary_fipa = os.path.join(_output_fdpa, OUT_BOUNDARIES_FIPA)
+    _out_mpext_fipa = os.path.join(_output_fdpa, OUT_MAPS_FIPA)
+    with open(_out_bdary_fipa, "w") as _w_b_file, open(_out_mpext_fipa, "w") as _w_m_file:
+        json.dump(_all_boundary_dicts, _w_b_file, indent=4)
+        json.dump(_all_map_dicts, _w_m_file, indent=4)
+        print("Wrote: '%s' and '%s' at '%s'" % (OUT_BOUNDARIES_FIPA, OUT_MAPS_FIPA,
+                                                _output_fdpa))
+    del _out_bdary_fipa, _out_mpext_fipa
+
+    # build geo-event filter fixtures
     _all_geoevt_dicts = []
     for _cur_geoevt in _geoevt_list:
         _cur_geoevt_dict = generate_geoevent_dict(_cur_geoevt, _reqest_dict, _geoflt_dict)
@@ -107,8 +168,10 @@ if __name__ == "__main__":
         del _cur_geoevt, _cur_geoevt_dict
 
     # write output file
+    _geoevt_fixture_fipa = os.path.join(_output_fdpa, OUT_GEOFILTERS_FIPA)
     with open(_geoevt_fixture_fipa, "w") as w_file:
         json.dump(_all_geoevt_dicts, w_file, indent=4)
         print("Wrote: %s" % _geoevt_fixture_fipa)
+    del _geoevt_fixture_fipa
 
     print("Finished (%d seconds)." % (datetime.datetime.now() - _ini_time).total_seconds())
