@@ -1,10 +1,11 @@
 from django.shortcuts import render
 
-from crud.models import Filter, Location, Region, Timeseries, TimeseriesParameter
+from crud.models import Boundary, Filter, Location, Map, Region, Timeseries, TimeseriesParameter
 from rest_framework.decorators import api_view
 from django.http.response import JsonResponse
-from crud.serializers import FilterSerializer, LocationSerializer, RegionSerializer, TimeseriesParameterSerializer
+from crud.serializers import BoundarySerializer, FilterSerializer, LocationSerializer, MapSerializer, RegionSerializer
 from crud.serializers import FilterListItemSerializer, TimeseriesDatalessSerializer, TimeseriesDatafullSerializer
+from crud.serializers import TimeseriesParameterSerializer
 from rest_framework import status
 
 # ## CONSTANTS ####################################################################################################### #
@@ -12,24 +13,38 @@ from rest_framework import status
 API_VERSION = "1.25"
 
 
-# ## DEFS ############################################################################################################ #
+# ## MAPS ############################################################################################################ #
+
+@api_view(['GET'])
+def bondary_list(request):
+
+    boundaries = Boundary.objects.all()
+    boundary_serializer = BoundarySerializer(boundaries, many=True)
+    return JsonResponse(boundary_serializer.data, safe=False)
+
 
 @api_view(['GET'])
 def location(request):
 
-    if request.method == 'GET':
-        locs = Location.objects.all()
-        locs_serializer = LocationSerializer(locs, many=True)
-        return JsonResponse(locs_serializer.data, safe=False)
+    locs = Location.objects.all()
+    locs_serializer = LocationSerializer(locs, many=True)
+    return JsonResponse(locs_serializer.data, safe=False)
+
+
+@api_view(['GET'])
+def maps_list(request):
+
+    maps = Map.objects.all()
+    maps_serializer = MapSerializer(maps, many=True)
+    return JsonResponse(maps_serializer.data, safe=False)
 
 
 @api_view(['GET'])
 def region(request):
 
-    if request.method == 'GET':
-        region_obj = Region.objects.first()
-        region_serializer = RegionSerializer(region_obj, many=False)
-        return JsonResponse(region_serializer.data, safe=False)
+    region_obj = Region.objects.first()
+    region_serializer = RegionSerializer(region_obj, many=False)
+    return JsonResponse(region_serializer.data, safe=False)
 
 
 # ## FILTERS ######################################################################################################### #

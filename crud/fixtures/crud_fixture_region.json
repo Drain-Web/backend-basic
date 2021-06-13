@@ -16,7 +16,7 @@
    "systemInformation": {
     "name": "Missouri River Tributaries"
    },
-   "map": "",
+   "map": "erb_all",
    "datetime": {
     "timezone": "GMT",
     "datetimeFormat": "yyyy-MM-dd HH:mm"

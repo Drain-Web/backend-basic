@@ -3,13 +3,7 @@ from crud.models import Boundary, DatetimeDefinition, Filter, Location, Map, Reg
 from crud.models import Timeseries, TimeseriesEvent, TimeseriesTimestep, TimeseriesParameter
 
 
-class BoundarySerializer(serializers.ModelSerializer):
-    polygon = serializers.JSONField()
-
-    class Meta:
-        model = Boundary
-        fields = ('polygon', 'geoDatum', 'projection', 'linecolor', 'lineWidth', 'fillcolor')
-
+# ## GENERAL ######################################################################################################### #
 
 class DatetimeDefinitionSerializer(serializers.ModelSerializer):
 
@@ -18,13 +12,83 @@ class DatetimeDefinitionSerializer(serializers.ModelSerializer):
         fields = ('timezone', 'datetimeFormat')
 
 
-'''
-class MapExtentSerializer(serializers.ModelSerializer):
+class LocationSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = MapExtent
-        fields = ('name', 'top', 'bottom', 'left', 'right')
-'''
+        model = Location
+        fields = '__all__'
+
+
+# ## BOUNDARY ######################################################################################################## #
+
+class BoundarySerializer(serializers.ModelSerializer):
+    polygon = serializers.JSONField()
+
+    class Meta:
+        model = Boundary
+        fields = ('id', 'polygon', 'geoDatum', 'projection', 'lineColor', 'lineWidth', 'fillColor')
+
+
+class BoundarySerializerNoId(serializers.ModelSerializer):
+    polygon = serializers.JSONField()
+
+    class Meta:
+        model = Boundary
+        fields = ('polygon', 'geoDatum', 'projection', 'lineColor', 'lineWidth', 'fillColor')
+
+
+# ## MAP ############################################################################################################# #
+
+class MapSerializer(serializers.ModelSerializer):
+
+    defaultExtent = serializers.SerializerMethodField('get_default_extent')
+
+    class Meta:
+        model = Map
+        fields = ('id', 'defaultExtent', 'geoDatum', 'projection')
+
+    def get_default_extent(self, obj):
+        return {
+            "left": obj.defaultExtent_left,
+            "right": obj.defaultExtent_right,
+            "top": obj.defaultExtent_top,
+            "bottom": obj.defaultExtent_bottom
+        }
+
+
+class MapSerializerNoId(serializers.ModelSerializer):
+
+    defaultExtent = serializers.SerializerMethodField('get_default_extent')
+
+    class Meta:
+        model = Map
+        fields = ('defaultExtent', 'geoDatum', 'projection')
+
+    def get_default_extent(self, obj):
+        return {
+            "left": obj.defaultExtent_left,
+            "right": obj.defaultExtent_right,
+            "top": obj.defaultExtent_top,
+            "bottom": obj.defaultExtent_bottom
+        }
+
+
+# ## FILTER ########################################################################################################## #
+
+class FilterSerializer(serializers.ModelSerializer):
+    """
+    Filter element returned by single-element search.
+    """
+
+    id = serializers.CharField()
+    description = serializers.CharField()
+    map = MapSerializerNoId(many=False)
+    boundary = BoundarySerializerNoId(many=False)
+
+    class Meta:
+        model = Filter
+        fields = '__all__'
+        fields = ('id', 'description', 'map', 'boundary')
 
 
 class FilterListItemSerializer(serializers.ModelSerializer):
@@ -35,42 +99,11 @@ class FilterListItemSerializer(serializers.ModelSerializer):
 
     id = serializers.CharField()
     description = serializers.CharField()
-
-    # TODO: bellow
-    # mapExtent = MapExtentSerializer(many=False)
+    map = MapSerializerNoId(many=False)
 
     class Meta:
         model = Filter
-        fields = ('id', 'description', 'mapExtent')
-
-
-class FilterSerializer(serializers.ModelSerializer):
-    """
-    Filter element returned by single-element search.
-    """
-    # TODO: bellow
-    # mapExtent = MapExtentSerializer(many=False)
-    boundary = BoundarySerializer(many=False)
-
-    class Meta:
-        model = Filter
-        fields = '__all__'
-
-
-class LocationSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Location
-        fields = '__all__'
-
-
-class MapSerializer(serializers.ModelSerializer):
-    # TODO: bellow
-    # defaultExtent = MapExtentSerializer(many=False)
-
-    class Meta:
-        model = Map
-        fields = ('defaultExtent', 'geoDatum', 'projection')
+        fields = ('id', 'description', 'map')
 
 
 # ## REGION ########################################################################################################## #
@@ -85,14 +118,18 @@ class SystemInformationSerializer(serializers.ModelSerializer):
 class RegionSerializer(serializers.ModelSerializer):
     systemInformation = SystemInformationSerializer(many=False)
     datetime = DatetimeDefinitionSerializer(many=False)
-    map = MapSerializer(many=False)
+    map = MapSerializerNoId(many=False)
+    defaultFilter = serializers.SerializerMethodField('get_default_filter_id')
 
     class Meta:
         model = Region
-        fields = ("systemInformation", "datetime", "map")
+        fields = ("systemInformation", "datetime", "map", "defaultFilter")
+
+    def get_default_filter_id(self, obj):
+        return obj.defaultFilter.id
 
 
-# ## TIMESERIES PARAMETERS ########################################################################################### #
+# ## TIMESERIES ###################################################################################################### #
 
 class TimeseriesParameterSerializer(serializers.ModelSerializer):
     """
@@ -101,21 +138,16 @@ class TimeseriesParameterSerializer(serializers.ModelSerializer):
 
     id = serializers.CharField()
     name = serializers.CharField()
-    parameterType = serializers.CharField()
-    unit = serializers.CharField()
-    displayUnit = serializers.CharField()
-    usesDatum = serializers.BooleanField()
+    shortName = serializers.CharField()
     parameterGroup = serializers.SerializerMethodField('get_parameter_group_id')
 
     class Meta:
         model = TimeseriesParameter
-        fields = ('id', 'name', 'parameterType', 'unit', 'displayUnit', 'usesDatum', 'parameterGroup')
+        fields = ('id', 'name', 'shortName', 'parameterGroup')
 
     def get_parameter_group_id(self, obj):
         return obj.parameterGroup.id
 
-
-# ## TIMESERIES ###################################################################################################### #
 
 class TimeseriesEventSerializer(serializers.ModelSerializer):
     """
