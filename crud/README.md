@@ -16,17 +16,17 @@ An endpoint in *v1dw* subdomain has specific content of the Drain Web (*dw*) API
 
 They are defined in the *api_rest/urls.py* file.
 
-### http://.../v1/region
+### https://.../v1/region
 
 Returns the first Region document. It is supposed to be the only one of the database.
 
-### http://.../v1/locations
+### https://.../v1/locations
 
 Returns all available locations.
 
 An endpoint with additional filters is yet to be implemented.
 
-### http://.../v1/filters
+### https://.../v1/filters
 
 Returns all available filters in the database.
 
@@ -34,23 +34,31 @@ The filters returned don't have geojson polygon data associated to it.
 
 Should be used for listing available options only.
 
-### http://.../v1/filter/*<id\>*
+### https://.../v1dw/filters/
+
+Pretty similar to the aforementioned *http://.../v1/filters*, with the difference that it accepts the following parameters:
+
+- **includePolygon:** Expected "true" or "false" [default].
+ 
+Example: ```http://.../v1dw/filters/?includePolygon=true```  
+
+### https://.../v1/filter/*<id\>*
 
 Return the filter with id=*<id\>*.
 
 It contains the geojson polygon data.
 
-### http://.../v1/parameters
+### https://.../v1/parameters
 
 List all timeserie parameters and their general information.
 
-### http://.../v1/timeseries
+### https://.../v1/timeseries
 
 List all timeseries in the database that attend some parameters.
 
 When only the mandatory parameter is given, only the metadata of the timeseries is returned. If additional parameters are given, the inner data is also provided.
 
-Example: ```http://.../v1/timeseries/filter=alpha&location=beta```
+Example: ```http://.../v1/timeseries/?filter=alpha&location=beta```
 
 Mandatory parameter:
 
@@ -59,3 +67,11 @@ Mandatory parameter:
 Optional parameters:
 
 - **location:** Location Id.
+
+### https://.../v1dw/boundaries
+
+Lists all filter boundaries with their polygons.
+
+### https://.../v1dw/maps
+
+List all map extents.
