@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from crud.models import Boundary, DatetimeDefinition, Filter, Location, Map, Region, SystemInformation
-from crud.models import Timeseries, TimeseriesEvent, TimeseriesTimestep, TimeseriesParameter
+from crud.models import Timeseries, TimeseriesEvent, TimeseriesTimestep, TimeseriesParameter, LocationRelation
 
 
 # ## GENERAL ######################################################################################################### #
@@ -12,11 +12,31 @@ class DatetimeDefinitionSerializer(serializers.ModelSerializer):
         fields = ('timezone', 'datetimeFormat')
 
 
+class LocationRelationSerializer(serializers.ModelSerializer):
+    id = serializers.SerializerMethodField('get_label_id')
+
+    class Meta:
+        model = LocationRelation
+        fields = ('id', 'relatedLocationId')
+
+    def get_label_id(self, obj):
+        return obj["labelId"]
+
+
 class LocationSerializer(serializers.ModelSerializer):
+    locationId = serializers.SerializerMethodField('get_location_id')
+    shortName = serializers.SerializerMethodField('get_location_name')
+    relations = LocationRelationSerializer(many=True)
 
     class Meta:
         model = Location
-        fields = '__all__'
+        fields = ('locationId', 'shortName', 'relations', 'x', 'y')
+
+    def get_location_id(self, obj):
+        return obj.id
+
+    def get_location_name(self, obj):
+        return obj.name
 
 
 # ## BOUNDARY ######################################################################################################## #

@@ -48,6 +48,14 @@ class TimeseriesTimestep(models.Model):
     unit = models.CharField(max_length=30, default='nonequidistant')
 
 
+class LocationRelation(models.Model):
+    id = models.IntegerField(default=1, primary_key=True)
+    labelId = models.CharField(max_length=20, null=False,
+                               choices=(('UPSTREAM', 'DOWNSTREAM'), 
+                                        ('UPSTREAM', 'DOWNSTREAM')))
+    relatedLocationId = models.CharField(max_length=100, null=False)
+
+
 # ### Create your meta models level 2 here ########################################################################### #
 
 class Location(models.Model):
@@ -55,6 +63,7 @@ class Location(models.Model):
     name = models.CharField(max_length=70, default='')
     x = models.FloatField()
     y = models.FloatField()
+    relations = models.ArrayField(model_container=LocationRelation)
 
 
 class Map(models.Model):

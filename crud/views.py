@@ -11,6 +11,7 @@ from rest_framework import status
 # ## CONSTANTS ####################################################################################################### #
 
 API_VERSION = "1.25"
+GEO_DATUM = "WGS 1984"
 
 
 # ## MAPS ############################################################################################################ #
@@ -28,7 +29,13 @@ def location(request):
 
     locs = Location.objects.all()
     locs_serializer = LocationSerializer(locs, many=True)
-    return JsonResponse(locs_serializer.data, safe=False)
+    ret_dict = {
+        "version": API_VERSION,
+        "geoDatum": "WGS 1984",
+        "locations": locs_serializer.data
+    }
+
+    return JsonResponse(ret_dict, safe=False)
 
 
 @api_view(['GET'])
