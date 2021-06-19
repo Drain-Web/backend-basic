@@ -1,0 +1,86 @@
+{
+	"input_folder_path":              "toolbox\\fixture_converter-timeseries_csv\\input\\time_series",
+	"output_timeseries_folder_path":  "crud\\fixtures\\crud_fixture_timeseries\\q",
+	"output_geoevtfilters_file_path": "crud\\fixtures\\crud_prefixture_geoevts.json",
+	"events": {
+		"datetime_format": "%Y-%m-%d %H:%M:%S",
+		"definitions": {
+			"e2019mayMid": {
+				"filter_name": "2019 May All",
+				"min_date": "2019-05-04 00:00:00",
+				"max_date": "2019-05-20 00:00:00"
+			},
+			"e2019julIni": {
+				"filter_name": "2019 Jul Ini",
+				"min_date": "2019-06-27 00:00:00",
+				"max_date": "2019-07-20 00:00:00"
+			},
+			"e2020mayEnd": {
+				"filter_name": "2020 May End",
+				"min_date": "2020-05-16 00:00:00",
+				"max_date": "2020-06-17 00:00:00"
+			},
+			"e2020junEnd": {
+				"filter_name": "2020 Jun End",
+				"min_date": "2020-06-18 00:00:00",
+				"max_date": "2020-07-08 00:00:00"
+			}
+		}
+	},
+	"global": {
+		"type": "instantaneous",
+		"parameterId": "Q.obs",
+		"unit": "m3/s",
+		"datetime_column_id": "Unnamed: 0",
+		"datetime_format": "%Y-%m-%d %H:%M:%S",
+		"data_column_id": "q",
+		"timeStep": {
+			"unit": "nonequidistant"
+		},
+		"flag": 0,
+		"missVal": -999,
+		"dataFormatting": "%.02f"
+	},
+	"files":{
+		"Q_06797500.csv": {
+			"location": "usgs_06797500",
+			"stationName": "USGS-06797500",
+			"geoFilters": ["erb_all", "erb_m"]
+		},
+		"Q_06799000.csv": {
+			"location": "usgs_06799000",
+			"stationName": "USGS-06799000",
+			"geoFilters": ["erb_all", "erb_m"]
+		},
+		"Q_06799100.csv": {
+			"location": "usgs_06799100",
+			"stationName": "USGS-06799100",
+			"geoFilters": ["erb_all", "erb_m"]
+		},
+		"Q_06799315.csv": {
+			"location": "usgs_06799315",
+			"stationName": "USGS-06799315",
+			"geoFilters": ["erb_all", "erb_s"]
+		},
+		"Q_06799350.csv": {
+			"location": "usgs_06799350",
+			"stationName": "USGS-06799350",
+			"geoFilters": ["erb_all", "erb_m"]
+		},
+		"Q_06799445.csv": {
+			"location": "usgs_06799445",
+			"stationName": "USGS-06799445",
+			"geoFilters": ["erb_all", "erb_n"]
+		},
+		"Q_06799500.csv": {
+			"location": "usgs_06799500",
+			"stationName": "USGS-06799500",
+			"geoFilters": ["erb_all", "erb_n"]
+		},
+		"Q_06800000.csv": {
+			"location": "usgs_06800000",
+			"stationName": "USGS-06800000",
+			"geoFilters": ["erb_all", "erb_m"]
+		}
+	}
+}

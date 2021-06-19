@@ -38,10 +38,18 @@ echo "Inserting geo-event filters..."
 python .\manage.py loaddata .\crud\fixtures\crud_fixtureAuto_geoevents.json
 echo ""
 
-Get-ChildItem ".\crud\fixtures\crud_fixture_timeseries\" -Filter *.json | 
+Get-ChildItem ".\crud\fixtures\crud_fixture_timeseries\q" -Filter *.json | 
 Foreach-Object {
   echo "Inserting timeseries $($_.Name)..."
   python .\manage.py loaddata $_.FullName
 }
 echo ""
+
+Get-ChildItem ".\crud\fixtures\crud_fixture_timeseries\z" -Filter *.json | 
+Foreach-Object {
+  echo "Inserting timeseries $($_.Name)..."
+  python .\manage.py loaddata $_.FullName
+}
+echo ""
+
 echo "Finished loading fixtures."
