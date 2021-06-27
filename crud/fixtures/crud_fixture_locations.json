@@ -18,6 +18,19 @@
    "relations": [{
      "labelId": "UPSTREAM",
      "relatedLocationId": "usgs_06797500"
+   }],
+   "attributes": [{
+     "id": "alertQraw",
+     "name": "Alert Discharge",
+     "number": 32.1
+   }, {
+     "id": "floodQraw",
+     "name": "Flood Discharge",
+     "number": 37.2
+   }, {
+     "id": "majorfloodQraw",
+     "name": "Major Flood Discharge",
+     "number": 42.3
    }]
   }
  }, {
@@ -42,6 +55,31 @@
    }, {
      "labelId": "UPSTREAM",
      "relatedLocationId": "usgs_06799100"
+   }],
+   "attributes": [{
+     "id": "alertQraw",
+     "name": "Alert Discharge",
+     "number": 55.1
+   }, {
+     "id": "floodQraw",
+     "name": "Flood Discharge",
+     "number": 82.3
+   }, {
+     "id": "majorfloodQraw",
+     "name": "Major Flood Discharge",
+     "number": 105.1
+   }, {
+     "id": "alertHraw",
+     "name": "Alert Water Level",
+     "number": 9.4
+   }, {
+     "id": "floodHraw",
+     "name": "Flood Water Level",
+     "number": 12.5
+   }, {
+     "id": "majorfloodHraw",
+     "name": "Major Flood Water Level",
+     "number": 14.1
    }]
   }
  }, {
@@ -54,6 +92,31 @@
    "relations": [{
      "labelId": "UPSTREAM",
      "relatedLocationId": "usgs_06799315"
+   }],
+   "attributes": [{
+     "id": "alertQraw",
+     "name": "Alert Discharge",
+     "number": 60.3
+   }, {
+     "id": "floodQraw",
+     "name": "Flood Discharge",
+     "number": 75.6
+   }, {
+     "id": "majorfloodQraw",
+     "name": "Major Flood Discharge",
+     "number": 90.9
+   }, {
+     "id": "alertHraw",
+     "name": "Alert Water Level",
+     "number": 1.6
+   }, {
+     "id": "floodHraw",
+     "name": "Flood Water Level",
+     "number": 2.0
+   }, {
+     "id": "majorfloodHraw",
+     "name": "Major Flood Water Level",
+     "number": 2.4
    }]
   }
  }, {
@@ -63,7 +126,20 @@
    "name": "Logan Creek at Wakefield, Nebr.",
    "x": -96.862,
    "y":  42.277,
-   "relations": []
+   "relations": [],
+   "attributes": [{
+     "id": "alertHraw",
+     "name": "Alert Water Level",
+     "number": 10.1
+   }, {
+     "id": "floodHraw",
+     "name": "Flood Water Level",
+     "number": 12.0
+   }, {
+     "id": "majorfloodHraw",
+     "name": "Major Flood Water Level",
+     "number": 13.9
+   }]
   }
  }, {
   "model": "crud.location",
@@ -75,6 +151,19 @@
    "relations": [{
      "labelId": "UPSTREAM",
      "relatedLocationId": "usgs_06799445"
+   }],
+   "attributes": [{
+     "id": "alertHraw",
+     "name": "Alert Water Level",
+     "number": 4.9
+   }, {
+     "id": "floodHraw",
+     "name": "Flood Water Level",
+     "number": 5.1
+   }, {
+     "id": "majorfloodHraw",
+     "name": "Major Flood Water Level",
+     "number": 5.3
    }]
   }
  }, {
@@ -84,7 +173,20 @@
    "name": "Maple Creek near Nickerson, Nebr.",
    "x": -96.541,
    "y":  41.561,
-   "relations": []
+   "relations": [],
+   "attributes": [{
+     "id": "alertQraw",
+     "name": "Alert Discharge",
+     "number": 6.3
+   }, {
+     "id": "floodQraw",
+     "name": "Flood Discharge",
+     "number": 8.6
+   }, {
+     "id": "majorfloodQraw",
+     "name": "Major Flood Discharge",
+     "number": 11.4
+   }]
   }
  }
 ]

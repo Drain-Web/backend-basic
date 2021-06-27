@@ -1,0 +1,27 @@
+[
+ {
+  "model": "crud.thresholdGroup",
+  "fields": {
+    "id": "peakH",
+    "name": "Peak Water Level"
+  }
+ }, {
+  "model": "crud.thresholdGroup",
+  "fields": {
+    "id": "latestH",
+    "name": "Latest Water Level"
+  }
+ }, {
+  "model": "crud.thresholdGroup",
+  "fields": {
+    "id": "peakQ",
+    "name": "Peak Discharge"
+  }
+ }, {
+  "model": "crud.thresholdGroup",
+  "fields": {
+    "id": "latestQ",
+    "name": "Latest Peak Discharge"
+  }
+ }
+]

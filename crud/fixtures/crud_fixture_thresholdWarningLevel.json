@@ -1,0 +1,43 @@
+[
+ {
+  "model": "crud.thresholdWarningLevel",
+  "fields": {
+    "id": 0,
+    "name": "Unknown",
+    "color": "#777777",
+    "iconName": "unknownScenario.png"
+  }
+ }, {
+  "model": "crud.thresholdWarningLevel",
+  "fields": {
+    "id": 1,
+    "name": "No warning",
+    "color": "#33AA33",
+    "iconName": "noIssueScenario.png"
+  }
+ }, {
+  "model": "crud.thresholdWarningLevel",
+  "fields": {
+    "id": 2,
+    "name": "Alert",
+    "color": "#BBBB00",
+    "iconName": "alertScenario.png"
+  }
+ }, {
+  "model": "crud.thresholdWarningLevel",
+  "fields": {
+    "id": 3,
+    "name": "Flood",
+    "color": "#BB0000",
+    "iconName": "floodScenario.png"
+  }
+ }, {
+  "model": "crud.thresholdWarningLevel",
+  "fields": {
+    "id": 4,
+    "name": "Major Flood",
+    "color": "#BB00BB",
+    "iconName": "majorFloodScenario.png"
+  }
+ }
+]

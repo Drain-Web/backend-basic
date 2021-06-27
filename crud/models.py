@@ -48,6 +48,13 @@ class TimeseriesTimestep(models.Model):
     unit = models.CharField(max_length=30, default='nonequidistant')
 
 
+class LocationAttribute(models.Model):
+    id = models.CharField(max_length=10, primary_key=True)
+    name = models.CharField(max_length=30, null=False)
+    number = models.FloatField(null=True)
+    text = models.CharField(max_length=100, null=True)
+
+
 class LocationRelation(models.Model):
     id = models.IntegerField(default=1, primary_key=True)
     labelId = models.CharField(max_length=20, null=False,
@@ -64,6 +71,7 @@ class Location(models.Model):
     x = models.FloatField()
     y = models.FloatField()
     relations = models.ArrayField(model_container=LocationRelation)
+    attributes = models.ArrayField(model_container=LocationAttribute)
 
 
 class Map(models.Model):
@@ -84,6 +92,48 @@ class TimeseriesEvent(models.Model):
     time = models.CharField(max_length=8, default='00:00:00')
     value = models.FloatField()
     flag = models.IntegerField(default=0)
+
+
+class LevelThresholdValue(models.Model):
+    id = models.CharField(max_length=10, primary_key=True)
+    levelThresholdId = models.CharField(max_length=30, null=False)  # TODO - link it properly
+    valueFunction = models.CharField(max_length=30, null=False)
+
+
+class ThresholdWarningLevel(models.Model):
+    id = models.IntegerField(primary_key=True)
+    name = models.CharField(max_length=50, null=False)
+    color = models.CharField(max_length=10, null=False)
+    iconName = models.CharField(max_length=30, null=True)
+
+
+class ThresholdGroup(models.Model):
+    id = models.CharField(max_length=30, primary_key=True)
+    name = models.CharField(max_length=30, null=False)
+
+
+class LevelThreshold(models.Model):
+    id = models.CharField(max_length=30, primary_key=True)
+    name = models.CharField(max_length=30, default=False)
+    shortName = models.CharField(max_length=15, default=False)
+    upWarningLevelId = models.ForeignKey(
+        to=ThresholdWarningLevel,
+        on_delete=models.CASCADE,
+        null=False
+    )
+    thresholdGroup = models.ForeignKey(
+        to=ThresholdGroup,
+        on_delete=models.CASCADE,
+        null=False
+    )
+
+
+class ThresholdValueSet(models.Model):
+    id = models.CharField(max_length=10, primary_key=True)
+    name = models.CharField(max_length=30, null=False)
+    levelThresholdValues = models.ArrayReferenceField(
+        to=LevelThresholdValue
+    )
 
 
 # ### Create your models here ######################################################################################## #
@@ -155,4 +205,8 @@ class Timeseries(models.Model):
     filter_set = models.ArrayReferenceField(
         to=Filter,
         on_delete=models.DO_NOTHING
+    )
+    thresholdValueSets = models.ArrayReferenceField(
+        to=ThresholdValueSet,
+        null=True
     )

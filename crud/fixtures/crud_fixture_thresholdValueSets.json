@@ -1,0 +1,17 @@
+[
+ {
+  "model": "crud.thresholdvalueset",
+  "fields": {
+   "id": "Hraw",
+   "name": "Water level - raw",
+   "levelThresholdValues": ["alertLevelHraw", "floodLevelHraw", "majorFloodLevelHraw"]
+  }
+ }, {
+  "model": "crud.thresholdvalueset",
+  "fields": {
+   "id": "Qraw",
+   "name": "Discharge - raw",
+   "levelThresholdValues": ["alertLevelQraw", "floodLevelQraw", "majorFloodLevelQraw"]
+  }
+ }
+]

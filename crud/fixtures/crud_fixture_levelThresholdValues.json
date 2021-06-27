@@ -1,0 +1,45 @@
+[
+ {
+  "model": "crud.levelThresholdValue",
+  "fields": {
+    "id": "alertLevelHraw",
+    "levelThresholdId": "AlertLevelHraw",
+    "valueFunction": "@alertHraw@"
+  }
+ }, {
+  "model": "crud.levelThresholdValue",
+  "fields": {
+    "id": "floodLevelHraw",
+    "levelThresholdId": "FloodLevelHraw",
+    "valueFunction": "@floodHraw@"
+  }
+ }, {
+  "model": "crud.levelThresholdValue",
+  "fields": {
+    "id": "majorFloodLevelHraw",
+    "levelThresholdId": "MajorFloodLevelHraw",
+    "valueFunction": "@majorfloodHraw@"
+  }
+ }, {
+  "model": "crud.levelThresholdValue",
+  "fields": {
+    "id": "alertLevelQraw",
+    "levelThresholdId": "AlertLevelQraw",
+    "valueFunction": "@alertQraw@"
+  }
+ }, {
+  "model": "crud.levelThresholdValue",
+  "fields": {
+    "id": "floodLevelQraw",
+    "levelThresholdId": "FloodLevelQraw",
+    "valueFunction": "@floodQraw@"
+  }
+ }, {
+  "model": "crud.levelThresholdValue",
+  "fields": {
+    "id": "majorFloodLevelQraw",
+    "levelThresholdId": "MajorFloodLevelQraw",
+    "valueFunction": "@majorfloodQraw@"
+  }
+ }
+]
