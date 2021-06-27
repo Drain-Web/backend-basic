@@ -1,11 +1,14 @@
 from django.shortcuts import render
 
-from crud.models import Boundary, Filter, Location, Map, Region, Timeseries, TimeseriesParameter
+from crud.models import Boundary, Filter, Location, Map, Region, Timeseries, TimeseriesParameter, ThresholdGroup
+from crud.models import ThresholdValueSet, LevelThreshold
+
 from rest_framework.decorators import api_view
 from django.http.response import JsonResponse
 from crud.serializers import BoundarySerializer, FilterSerializer, LocationSerializer, MapSerializer, RegionSerializer
 from crud.serializers import FilterListItemSerializer, TimeseriesDatalessSerializer, TimeseriesDatafullSerializer
-from crud.serializers import TimeseriesParameterSerializer
+from crud.serializers import TimeseriesParameterSerializer, ThresholdGroupSerializer, ThresholdValueSetSerializer
+from crud.serializers import LevelThresholdSerializer
 from rest_framework import status
 
 # ## CONSTANTS ####################################################################################################### #
@@ -139,6 +142,8 @@ def timeseries_list_by_querystring(request):
     if location_id is None:
         selected_timeseries = Timeseries.objects.filter(filter_set_id__id__contains=filter_id)
         timeseries_serializer = TimeseriesDatalessSerializer(selected_timeseries, many=True)
+        if len(timeseries_serializer.data) == 0:
+            return JsonResponse([], safe=False)
         return JsonResponse(timeseries_serializer.data, safe=False)
 
     # return full content of the timeseries
@@ -149,3 +154,55 @@ def timeseries_list_by_querystring(request):
         return JsonResponse(timeseries_serializer.data, safe=False)
 
     return JsonResponse({"message": "Unexpected query sting."}, status=status.HTTP_400_BAD_REQUEST, safe=False)
+
+
+# ## THRESHOLDS ##################################################################################################### #
+
+@api_view(['GET'])
+def threshold_value_sets_list(request):
+    all_threshold_value_sets = ThresholdValueSet.objects.all()
+    all_threshold_value_sets_serializer = ThresholdValueSetSerializer(all_threshold_value_sets, many=True)
+    return JsonResponse(all_threshold_value_sets_serializer.data, safe=False)
+ 
+
+@api_view(['GET'])
+def threshold_groups_list(request):
+    filter_id = request.GET.get('filter')
+
+    base_ret_dict = {
+        "version": API_VERSION,
+        "thresholdGroups": None
+    }
+
+    # if no filter provided, lists all threshold groups
+    if filter_id is None:
+        all_thresholdgroups = ThresholdGroup.objects.all()
+        all_thresholdgroups_serializer = ThresholdGroupSerializer(all_thresholdgroups, many=True)
+        base_ret_dict["thresholdGroups"] = all_thresholdgroups_serializer.data
+        return JsonResponse(base_ret_dict, safe=False)
+    
+    # if filter was provided, get all timeseries of this filter and map:
+    #   timeseries -> thresholdValueSet -> levelThresholdValues -> levelThresholds -> ThreshGroup
+    selected_timeseries = Timeseries.objects.filter(filter_set_id__id__contains=filter_id)
+    selected_timeseries = TimeseriesDatalessSerializer(selected_timeseries, many=True).data
+    level_threshold_ids = set()
+    for sel_ts in selected_timeseries:
+        for thresh_value_set in sel_ts["thresholdValueSets"]:
+            for thresh_value in thresh_value_set["levelThresholdValues"]:
+                level_threshold_ids.add(thresh_value["levelThresholdId"])
+                del thresh_value
+            del thresh_value_set
+        del sel_ts
+    del selected_timeseries
+    selected_level_thresholds = LevelThreshold.objects.filter(id__in=level_threshold_ids)
+    selected_level_thresholds = LevelThresholdSerializer(selected_level_thresholds, many=True).data
+    thresh_groups = {}
+    for lvl_thresh in selected_level_thresholds:
+        for thresh_group in lvl_thresh["thresholdGroup"]:
+            thresh_groups[thresh_group["id"]] = thresh_group
+            del thresh_group
+        del lvl_thresh
+    del selected_level_thresholds
+
+    base_ret_dict["thresholdGroups"] = list(thresh_groups.values())
+    return JsonResponse(base_ret_dict, safe=False)

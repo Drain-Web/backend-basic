@@ -112,28 +112,19 @@ class ThresholdGroup(models.Model):
     name = models.CharField(max_length=30, null=False)
 
 
+class ThresholdValueSet(models.Model):
+    id = models.CharField(max_length=10, primary_key=True)
+    name = models.CharField(max_length=30, null=False)
+    levelThresholdValues = models.ManyToManyField(LevelThresholdValue)
+
+
 class LevelThreshold(models.Model):
     id = models.CharField(max_length=30, primary_key=True)
     name = models.CharField(max_length=30, default=False)
     shortName = models.CharField(max_length=15, default=False)
-    upWarningLevelId = models.ForeignKey(
-        to=ThresholdWarningLevel,
-        on_delete=models.CASCADE,
-        null=False
-    )
-    thresholdGroup = models.ForeignKey(
-        to=ThresholdGroup,
-        on_delete=models.CASCADE,
-        null=False
-    )
-
-
-class ThresholdValueSet(models.Model):
-    id = models.CharField(max_length=10, primary_key=True)
-    name = models.CharField(max_length=30, null=False)
-    levelThresholdValues = models.ArrayReferenceField(
-        to=LevelThresholdValue
-    )
+    upWarningLevelId = models.ForeignKey(to=ThresholdWarningLevel, on_delete=models.CASCADE, null=False)
+    # thresholdGroup = models.ForeignKey(to=ThresholdGroup, on_delete=models.CASCADE, null=False)
+    thresholdGroup = models.ManyToManyField(ThresholdGroup)
 
 
 # ### Create your models here ######################################################################################## #
@@ -173,11 +164,7 @@ class TimeseriesParameter(models.Model):
     id = models.CharField(max_length=50, primary_key=True)
     name = models.CharField(max_length=100, default='')
     shortName = models.CharField(max_length=50, default='')
-    parameterGroup = models.ForeignKey(
-        ParameterGroup,
-        on_delete=models.CASCADE,
-        null=False
-    )
+    parameterGroup = models.ForeignKey(ParameterGroup, on_delete=models.CASCADE, null=False)
 
 
 class Timeseries(models.Model):
@@ -187,26 +174,12 @@ class Timeseries(models.Model):
     header_units = models.CharField(max_length=10, default='')
     header_missVal = models.FloatField()
     header_type = models.CharField(max_length=20, default='')
-    header_parameterId = models.ForeignKey(
-        TimeseriesParameter,
-        on_delete=models.CASCADE,
-        null=True
-    )
+    header_parameterId = models.ForeignKey(TimeseriesParameter, on_delete=models.CASCADE, null=True)
     header_stationName = models.CharField(max_length=20, default='')
-    header_location = models.ForeignKey(
-        Location,
-        on_delete=models.CASCADE,
-        null=True
-    )
+    header_location = models.ForeignKey(Location, on_delete=models.CASCADE, null=True)
     header_timeStep_unit = models.CharField(max_length=10, default='')
 
     # external references
     events = models.ArrayField(model_container=TimeseriesEvent)
-    filter_set = models.ArrayReferenceField(
-        to=Filter,
-        on_delete=models.DO_NOTHING
-    )
-    thresholdValueSets = models.ArrayReferenceField(
-        to=ThresholdValueSet,
-        null=True
-    )
+    filter_set = models.ArrayReferenceField(to=Filter, on_delete=models.DO_NOTHING)
+    thresholdValueSets = models.ManyToManyField(ThresholdValueSet)

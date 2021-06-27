@@ -5,7 +5,8 @@
     "id": "AlertLevelHraw",
     "name": "Alert - Water Level",
     "shortName": "Alert Level",
-    "upWarningLevelId": 2
+    "upWarningLevelId": 2,
+    "thresholdGroup": ["peakH", "latestH"]
   }
  }, {
   "model": "crud.levelThreshold",
@@ -13,7 +14,8 @@
     "id": "FloodLevelHraw",
     "name": "Flood - Water Level",
     "shortName": "Flood Level",
-    "upWarningLevelId": 3
+    "upWarningLevelId": 3,
+    "thresholdGroup": ["peakH", "latestH"]
   }
  }, {
   "model": "crud.levelThreshold",
@@ -21,7 +23,8 @@
     "id": "MajorFloodLevelHraw",
     "name": "Major Flood - Water Level",
     "shortName": "Major Flood Level",
-    "upWarningLevelId": 4
+    "upWarningLevelId": 4,
+    "thresholdGroup": ["peakH", "latestH"]
   }
  }, {
   "model": "crud.levelThreshold",
@@ -29,23 +32,26 @@
     "id": "AlertLevelQraw",
     "name": "Alert - Raw Discharge",
     "shortName": "Alert",
-    "upWarningLevelId": 2
+    "upWarningLevelId": 2,
+    "thresholdGroup": ["peakQ", "latestQ"]
   }
  }, {
   "model": "crud.levelThreshold",
   "fields": {
-    "id": "FloodLevelHraw",
+    "id": "FloodLevelQraw",
     "name": "Flood - Raw Discharge",
     "shortName": "Flood",
-    "upWarningLevelId": 3
+    "upWarningLevelId": 3,
+    "thresholdGroup": ["peakQ", "latestQ"]
   }
  }, {
   "model": "crud.levelThreshold",
   "fields": {
-    "id": "MajorFloodLevelHraw",
+    "id": "MajorFloodLevelQraw",
     "name": "Major Flood - Raw Discharge",
     "shortName": "Major Flood",
-    "upWarningLevelId": 4
+    "upWarningLevelId": 4,
+    "thresholdGroup": ["peakQ", "latestQ"]
   }
  }
 ]

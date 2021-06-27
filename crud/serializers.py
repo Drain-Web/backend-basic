@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from crud.models import Boundary, DatetimeDefinition, Filter, Location, Map, Region, SystemInformation
 from crud.models import Timeseries, TimeseriesEvent, TimeseriesTimestep, TimeseriesParameter, LocationRelation
+from crud.models import ThresholdGroup, ThresholdValueSet, LevelThreshold, LevelThresholdValue, ThresholdWarningLevel
 
 
 # ## GENERAL ######################################################################################################### #
@@ -149,6 +150,76 @@ class RegionSerializer(serializers.ModelSerializer):
         return obj.defaultFilter.id
 
 
+# ## THRESHOLDS ###################################################################################################### #
+
+class ThresholdGroupSerializer(serializers.ModelSerializer):
+    """
+
+    """
+    id = serializers.CharField()
+    name = serializers.CharField()
+
+    class Meta:
+        model = ThresholdGroup
+        fields = ("id", "name")
+
+
+class ThresholdWarningLevelSerializer(serializers.ModelSerializer):
+    """
+    """
+
+    id = serializers.IntegerField()
+    name = serializers.CharField()
+    color = serializers.CharField()
+    iconName = serializers.CharField()
+
+    class Meta:
+        model = ThresholdWarningLevel
+        fields = ('id', 'name', 'color', 'iconName')
+
+
+class LevelThresholdSerializer(serializers.ModelSerializer):
+    """
+
+    """
+
+    id = serializers.CharField()
+    name = serializers.CharField()
+    shortName = serializers.CharField()
+    upWarningLevelId = ThresholdWarningLevelSerializer(read_only=True, many=False)
+    thresholdGroup = ThresholdGroupSerializer(read_only=True, many=True)
+
+    class Meta:
+        model = LevelThreshold
+        fields = ('id', 'name', 'shortName', 'upWarningLevelId', 'thresholdGroup')
+
+
+
+class LevelThresholdValueSerializer(serializers.ModelSerializer):
+    """
+
+    """
+
+    levelThresholdId = serializers.CharField()
+    valueFunction = serializers.CharField()
+
+    class Meta:
+        model = LevelThresholdValue
+        fields = ('levelThresholdId', 'valueFunction')
+
+
+class ThresholdValueSetSerializer(serializers.ModelSerializer):
+    """
+    """
+    id = serializers.CharField()
+    name = serializers.CharField()
+    levelThresholdValues = LevelThresholdValueSerializer(read_only=True, many=True)
+
+    class Meta:
+        model = ThresholdValueSet
+        fields = ("id", "name", "levelThresholdValues")
+
+
 # ## TIMESERIES ###################################################################################################### #
 
 class TimeseriesParameterSerializer(serializers.ModelSerializer):
@@ -207,10 +278,11 @@ class TimeseriesDatalessSerializer(TimeseriesSerializerBase):
     Only the header of the timeseries. No data. For extensive listing.
     """
     header = serializers.SerializerMethodField('get_header')
+    thresholdValueSets = ThresholdValueSetSerializer(read_only=True, many=True)
 
     class Meta:
         model = Timeseries
-        fields = ('id', 'header')
+        fields = ('id', 'header', 'thresholdValueSets')
 
 
 class TimeseriesDatafullSerializer(TimeseriesSerializerBase):
