@@ -1,0 +1,51 @@
+[
+ {
+  "model": "crud.timeseriesparameter",
+  "fields": {
+   "id": "Q.obs",
+   "name": "Observed discharge",
+   "shortName": "Q.obs",
+   "parameterGroup": "Discharge"
+  }
+ }, {
+  "model": "crud.timeseriesparameter",
+  "fields": {
+   "id": "Q.forecast",
+   "name": "Forecasted discharge",
+   "shortName": "Q.forecast",
+   "parameterGroup": "Discharge"
+  }
+ }, {
+  "model": "crud.timeseriesparameter",
+  "fields": {
+   "id": "Q.sim",
+   "name": "Simulated discharge",
+   "shortName": "Q.sim",
+   "parameterGroup": "Discharge"
+  }
+ }, {
+  "model": "crud.timeseriesparameter",
+  "fields": {
+   "id": "Q.specific",
+   "name": "Specific runoff",
+   "shortName": "Q.specific",
+   "parameterGroup": "Runoff_mm"
+  }
+ }, {
+  "model": "crud.timeseriesparameter",
+  "fields": {
+   "id": "P.obs",
+   "name": "Observed precipitation",
+   "shortName": "P.obs",
+   "parameterGroup": "Precipitation"
+  }
+ }, {
+  "model": "crud.timeseriesparameter",
+  "fields": {
+   "id": "H.obs",
+   "name": "Observed waterlevel",
+   "shortName": "H.obs",
+   "parameterGroup": "Waterlevel"
+  }
+ }
+] 

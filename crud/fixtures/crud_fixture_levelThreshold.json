@@ -1,0 +1,51 @@
+[
+ {
+  "model": "crud.levelThreshold",
+  "fields": {
+    "id": "AlertLevelHraw",
+    "name": "Alert - Water Level",
+    "shortName": "Alert Level",
+    "upWarningLevelId": 2
+  }
+ }, {
+  "model": "crud.levelThreshold",
+  "fields": {
+    "id": "FloodLevelHraw",
+    "name": "Flood - Water Level",
+    "shortName": "Flood Level",
+    "upWarningLevelId": 3
+  }
+ }, {
+  "model": "crud.levelThreshold",
+  "fields": {
+    "id": "MajorFloodLevelHraw",
+    "name": "Major Flood - Water Level",
+    "shortName": "Major Flood Level",
+    "upWarningLevelId": 4
+  }
+ }, {
+  "model": "crud.levelThreshold",
+  "fields": {
+    "id": "AlertLevelQraw",
+    "name": "Alert - Raw Discharge",
+    "shortName": "Alert",
+    "upWarningLevelId": 2
+  }
+ }, {
+  "model": "crud.levelThreshold",
+  "fields": {
+    "id": "FloodLevelHraw",
+    "name": "Flood - Raw Discharge",
+    "shortName": "Flood",
+    "upWarningLevelId": 3
+  }
+ }, {
+  "model": "crud.levelThreshold",
+  "fields": {
+    "id": "MajorFloodLevelHraw",
+    "name": "Major Flood - Raw Discharge",
+    "shortName": "Major Flood",
+    "upWarningLevelId": 4
+  }
+ }
+]

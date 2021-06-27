@@ -1,0 +1,73 @@
+[
+ {
+  "model": "crud.parametergroup",
+  "fields": {
+   "id": "Discharge",
+   "parameterType": "instantaneous",
+   "unit": "m3/s",
+   "displayUnit": "m3/s",
+   "valueResolution": 0.01,
+   "usesDatum": false
+  }
+ }, {
+  "model": "crud.parametergroup",
+  "fields": {
+    "id": "Runoff_mm",
+    "parameterType": "instantaneous",
+    "unit": "mm",
+    "displayUnit": "mm",
+    "valueResolution": 0.01,
+    "usesDatum": false
+   }
+  }, {
+   "model": "crud.parametergroup",
+   "fields": {
+    "id": "Precipitation",
+    "parameterType": "accumulative",
+    "unit": "mm",
+    "displayUnit": "mm",
+    "valueResolution": 0.01,
+    "usesDatum": false
+   }
+  }, {
+   "model": "crud.parametergroup",
+   "fields": {
+    "id": "Evaporation",
+    "parameterType": "accumulative",
+    "unit": "mm",
+    "displayUnit": "mm",
+    "valueResolution": 0.01,
+    "usesDatum": false
+   }
+  }, {
+   "model": "crud.parametergroup",
+   "fields": {
+    "id": "Waterdepth",
+    "parameterType": "instantaneous",
+    "unit": "m",
+    "displayUnit": "m",
+    "valueResolution": 0.01,
+    "usesDatum": false
+   }
+  }, {
+   "model": "crud.parametergroup",
+   "fields": {
+    "id": "Waterlevel",
+    "parameterType": "instantaneous",
+    "unit": "m",
+    "displayUnit": "m",
+    "valueResolution": 0.01,
+    "usesDatum": false
+   }
+  }, {
+   "model": "crud.parametergroup",
+   "fields": {
+    "id": "Temperature",
+    "parameterType": "instantaneous",
+    "unit": "oC",
+    "displayUnit": "oC",
+    "valueResolution": 0.01,
+    "usesDatum": false
+   }
+  }
+]
