@@ -2,6 +2,7 @@ from rest_framework import serializers
 from crud.models import Boundary, DatetimeDefinition, Filter, Location, Map, Region, SystemInformation
 from crud.models import Timeseries, TimeseriesEvent, TimeseriesTimestep, TimeseriesParameter, LocationRelation
 from crud.models import ThresholdGroup, ThresholdValueSet, LevelThreshold, LevelThresholdValue, ThresholdWarningLevel
+from crud.models import LocationAttribute
 
 
 # ## GENERAL ######################################################################################################### #
@@ -12,6 +13,8 @@ class DatetimeDefinitionSerializer(serializers.ModelSerializer):
         model = DatetimeDefinition
         fields = ('timezone', 'datetimeFormat')
 
+
+# ## LOCATION ######################################################################################################## #
 
 class LocationRelationSerializer(serializers.ModelSerializer):
     id = serializers.SerializerMethodField('get_label_id')
@@ -32,6 +35,34 @@ class LocationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Location
         fields = ('locationId', 'shortName', 'relations', 'x', 'y')
+
+    def get_location_id(self, obj):
+        return obj.id
+
+    def get_location_name(self, obj):
+        return obj.name
+
+
+class LocationAttributeSerializer(serializers.ModelSerializer):
+    id = serializers.CharField()
+    name = serializers.CharField()
+    text = serializers.CharField()
+    number = serializers.CharField()
+
+    class Meta:
+        model = LocationAttribute
+        fields = ('id', 'name', 'text', 'number')
+
+
+class LocationWithAttrSerializer(serializers.ModelSerializer):
+    locationId = serializers.SerializerMethodField('get_location_id')
+    shortName = serializers.SerializerMethodField('get_location_name')
+    relations = LocationRelationSerializer(many=True)
+    attributes = LocationAttributeSerializer(many=True)
+
+    class Meta:
+        model = Location
+        fields = ('locationId', 'shortName', 'relations', 'x', 'y', 'attributes')
 
     def get_location_id(self, obj):
         return obj.id

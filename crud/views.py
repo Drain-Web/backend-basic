@@ -5,10 +5,10 @@ from crud.models import ThresholdValueSet, LevelThreshold
 
 from rest_framework.decorators import api_view
 from django.http.response import JsonResponse
-from crud.serializers import BoundarySerializer, FilterSerializer, LocationSerializer, MapSerializer, RegionSerializer
+from crud.serializers import BoundarySerializer, FilterSerializer, LocationSerializer, LocationWithAttrSerializer
 from crud.serializers import FilterListItemSerializer, TimeseriesDatalessSerializer, TimeseriesDatafullSerializer
-from crud.serializers import TimeseriesParameterSerializer, ThresholdGroupSerializer, ThresholdValueSetSerializer
-from crud.serializers import LevelThresholdSerializer
+from crud.serializers import TimeseriesParameterSerializer, MapSerializer, RegionSerializer
+from crud.serializers import ThresholdGroupSerializer, ThresholdValueSetSerializer, LevelThresholdSerializer
 from rest_framework import status
 
 # ## CONSTANTS ####################################################################################################### #
@@ -29,9 +29,13 @@ def bondary_list(request):
 
 @api_view(['GET'])
 def location(request):
+    showAttr = request.GET.get('showAttributes')
 
     locs = Location.objects.all()
-    locs_serializer = LocationSerializer(locs, many=True)
+    if (showAttr is not None) and showAttr:
+        locs_serializer = LocationWithAttrSerializer(locs, many=True)
+    else:
+        locs_serializer = LocationSerializer(locs, many=True)
     ret_dict = {
         "version": API_VERSION,
         "geoDatum": "WGS 1984",
