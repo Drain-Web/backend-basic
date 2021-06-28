@@ -26,6 +26,12 @@ Returns all available locations.
 
 An endpoint with additional filters is yet to be implemented.
 
+Optional parameter:
+
+- **showAttributes \*:** Expected "true" or "false" [default].
+
+Example: ```http://.../v1/locations/?showAttributes=true```
+
 ### https://.../v1/filters
 
 Returns all available filters in the database.
@@ -62,7 +68,7 @@ Example: ```http://.../v1/timeseries/?filter=alpha&location=beta```
 
 Mandatory parameter:
 
-- **filter \*:** Filter Id
+- **filter:** Filter Id
 
 Optional parameters:
 
@@ -75,3 +81,15 @@ Lists all filter boundaries with their polygons.
 ### https://.../v1dw/maps
 
 List all map extents.
+
+### https://.../v1dw/threshold_groups
+
+List all threshold groups. It can be used to retrieve the options to be used for display state-dependent icons on maps. 
+
+Defining the *filter id* restricts the number of entries returned to only the thresholds that are associated to at least one timeseries.
+
+Optional parameter:
+
+- **filter:** Filter Id
+
+Example: ```https://.../v1dw/threshold_groups?filter=alpha```
