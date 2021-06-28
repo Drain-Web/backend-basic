@@ -39,7 +39,8 @@
 		},
 		"flag": 0,
 		"missVal": -999,
-		"dataFormatting": "%.02f"
+		"dataFormatting": "%.02f",
+		"thresholdValueSets": ["Qraw"]
 	},
 	"files":{
 		"Q_06797500.csv": {

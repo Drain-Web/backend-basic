@@ -200,12 +200,12 @@ def convert_df_to_timeseries(data_df: pd.DataFrame, global_attr: dict, station_n
         "fields": {
             "header_units": global_attr["timeStep"]["unit"],
             "header_missVal": global_attr["missVal"],
-            "header_type": "instantaneous",
+            "header_type": global_attr["type"],
             "header_parameterId": global_attr["parameterId"],
             "header_stationName": station_name,
             "header_location": location_id,
             "header_timeStep_unit": global_attr["timeStep"]["unit"],
-
+            "thresholdValueSets": global_attr["thresholdValueSets"] if "thresholdValueSets" in global_attr else [],
             "filter_set": filter_set,
             "events": out_events
         }

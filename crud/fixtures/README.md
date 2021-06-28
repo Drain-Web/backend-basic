@@ -6,23 +6,20 @@ The data present in the ```.json``` must be compatible with the models defined i
 
 ## Files content
 
-### crud\_fixture.json
+**TODO** - describe each file
 
-General records.
+## Database content
 
-### crud\_fixture\_filter1.json
+**TODO** - document imported data (filters, stations, timeseries, parameters, ...)
 
-The filter with ID 1. It is separated due to the big size data demanded for the geojson data.
+The mock database describe the Elkhorn River Basin (the *region*).
 
-### crud\_fixture\_timeseries.json
+A total of four "geo-filters" are present: one for the whole region (*erb\_all*) and 3 subdivisions: Elhorn River Basin North (*erb\_n*), Middle (*erb\_m*) and South (*erb\_s*).
 
-General timeseries.
+There are 4 high-flow events observed during the years of 2019 and 2020, 2 events per year (*e2019mayMid*, *e2019julIni*, *e2020mayEnd*, *e2020junEnd*).
+
+A total of 16 "geoevent" filters are defined (4 events * 4 geo-filters).
 
 ## How to use
 
-To keep the database up to date, it is recommended the execution of the following sequence of commands **after executing** ```makemigrations``` **and** ```migrate``` **:**
-
-    $ python manage.py flush
-    $ python manage.py loaddata crud/fixutures/crud_fixture.json
-    $ python manage.py loaddata crud/fixtures/crud_fixture_filter1.json
-    $ python manage.py loaddata crud/fixtures/crud_fixture_timeseries.json
+The files in this folder are used as arguments by the ```manage_load_fixtures[.ps1|.sh]``` importing scripts in the root directory of the repository.

@@ -10,6 +10,26 @@ echo ""
 
 <# #>
 
+echo "Inserting threshold warning levels..."
+python .\manage.py loaddata .\crud\fixtures\crud_fixture_thresholdWarningLevel.json
+echo ""
+
+echo "Inserting threshold groups..."
+python .\manage.py loaddata .\crud\fixtures\crud_fixture_thresholdGroup.json
+echo ""
+
+echo "Inserting level thresholds..."
+python .\manage.py loaddata .\crud\fixtures\crud_fixture_levelThreshold.json
+echo ""
+
+echo "Inserting level threshold values..."
+python .\manage.py loaddata .\crud\fixtures\crud_fixture_levelThresholdValues.json
+echo ""
+
+echo "Inserting threshold value sets..."
+python .\manage.py loaddata .\crud\fixtures\crud_fixture_thresholdValueSets.json
+echo ""
+
 echo "Inserting boundaries..."
 python .\manage.py loaddata .\crud\fixtures\crud_fixtureAuto_boundaries.json
 echo ""
