@@ -10,6 +10,9 @@ from crud.serializers import FilterListItemSerializer, TimeseriesDatalessSeriali
 from crud.serializers import TimeseriesParameterSerializer, MapSerializer, RegionSerializer
 from crud.serializers import ThresholdGroupSerializer, ThresholdValueSetSerializer, LevelThresholdSerializer
 from rest_framework import status
+import crud.libs.views_lib as lib
+
+import copy
 
 # ## CONSTANTS ####################################################################################################### #
 
@@ -167,7 +170,7 @@ def threshold_value_sets_list(request):
     all_threshold_value_sets = ThresholdValueSet.objects.all()
     all_threshold_value_sets_serializer = ThresholdValueSetSerializer(all_threshold_value_sets, many=True)
     return JsonResponse(all_threshold_value_sets_serializer.data, safe=False)
- 
+
 
 @api_view(['GET'])
 def threshold_groups_list(request):
@@ -180,9 +183,9 @@ def threshold_groups_list(request):
 
     # if no filter provided, lists all threshold groups
     if filter_id is None:
-        all_thresholdgroups = ThresholdGroup.objects.all()
-        all_thresholdgroups_serializer = ThresholdGroupSerializer(all_thresholdgroups, many=True)
-        base_ret_dict["thresholdGroups"] = all_thresholdgroups_serializer.data
+        all_level_thresholds = LevelThreshold.objects.all()
+        all_level_thresholds = LevelThresholdSerializer(all_level_thresholds, many=True).data
+        base_ret_dict["thresholdGroups"] = lib.threshold_groups_list_invert_levels(all_level_thresholds)
         return JsonResponse(base_ret_dict, safe=False)
     
     # if filter was provided, get all timeseries of this filter and map:
@@ -198,15 +201,9 @@ def threshold_groups_list(request):
             del thresh_value_set
         del sel_ts
     del selected_timeseries
+
+    # with all Threshold Level IDs, retrieve the Threshold Groups
     selected_level_thresholds = LevelThreshold.objects.filter(id__in=level_threshold_ids)
     selected_level_thresholds = LevelThresholdSerializer(selected_level_thresholds, many=True).data
-    thresh_groups = {}
-    for lvl_thresh in selected_level_thresholds:
-        for thresh_group in lvl_thresh["thresholdGroup"]:
-            thresh_groups[thresh_group["id"]] = thresh_group
-            del thresh_group
-        del lvl_thresh
-    del selected_level_thresholds
-
-    base_ret_dict["thresholdGroups"] = list(thresh_groups.values())
+    base_ret_dict["thresholdGroups"] = lib.threshold_groups_list_invert_levels(selected_level_thresholds)
     return JsonResponse(base_ret_dict, safe=False)
