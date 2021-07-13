@@ -181,5 +181,5 @@ class Timeseries(models.Model):
 
     # external references
     events = models.ArrayField(model_container=TimeseriesEvent)
-    filter_set = models.ArrayReferenceField(to=Filter, on_delete=models.DO_NOTHING)
+    filter_set = models.ManyToManyField(Filter)
     thresholdValueSets = models.ManyToManyField(ThresholdValueSet)

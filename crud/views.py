@@ -6,11 +6,13 @@ from crud.models import ThresholdValueSet, LevelThreshold
 from rest_framework.decorators import api_view
 from django.http.response import JsonResponse
 from crud.serializers import BoundarySerializer, FilterSerializer, LocationSerializer, LocationWithAttrSerializer
-from crud.serializers import FilterListItemSerializer, TimeseriesDatalessSerializer, TimeseriesDatafullSerializer
-from crud.serializers import TimeseriesParameterSerializer, MapSerializer, RegionSerializer
+from crud.serializers import TimeseriesDatalessSerializer, TimeseriesDatafullSerializer
+from crud.serializers import TimeseriesWithFiltersSerializer, TimeseriesParameterSerializer
+from crud.serializers import FilterListItemSerializer, MapSerializer, RegionSerializer
 from crud.serializers import ThresholdGroupSerializer, ThresholdValueSetSerializer, LevelThresholdSerializer
 from rest_framework import status
 import crud.libs.views_lib as lib
+from typing import List
 
 import copy
 
@@ -31,6 +33,24 @@ def bondary_list(request):
 
 
 @api_view(['GET'])
+def maps_list(request):
+
+    maps = Map.objects.all()
+    maps_serializer = MapSerializer(maps, many=True)
+    return JsonResponse(maps_serializer.data, safe=False)
+
+
+@api_view(['GET'])
+def region(request):
+
+    region_obj = Region.objects.first()
+    region_serializer = RegionSerializer(region_obj, many=False)
+    return JsonResponse(region_serializer.data, safe=False)
+
+
+# ## LOCATIONS ####################################################################################################### #
+
+@api_view(['GET'])
 def location(request):
     showAttr = request.GET.get('showAttributes')
 
@@ -49,19 +69,30 @@ def location(request):
 
 
 @api_view(['GET'])
-def maps_list(request):
+def locations_with_filters(request):
+    show_attr = request.GET.get('showAttributes')
+    show_filters = request.GET.get('showFilters')
 
-    maps = Map.objects.all()
-    maps_serializer = MapSerializer(maps, many=True)
-    return JsonResponse(maps_serializer.data, safe=False)
+    # list all locations
+    locs = Location.objects.all()
+    if (show_attr is not None) and show_attr:
+        locs_serializer = LocationWithAttrSerializer(locs, many=True)
+    else:
+        locs_serializer = LocationSerializer(locs, many=True)
+    ret_dict = {
+        "version": API_VERSION,
+        "geoDatum": "WGS 1984",
+        "locations": locs_serializer.data
+    }
 
+    # include filters if requested
+    if (show_filters is not None) and show_filters:
+        all_timeseries = Timeseries.objects.all()
+        all_timeseries_serializer = TimeseriesWithFiltersSerializer(all_timeseries, many=True)
+        del all_timeseries
+        lib.include_filters_to_locations(ret_dict["locations"], all_timeseries_serializer.data)
 
-@api_view(['GET'])
-def region(request):
-
-    region_obj = Region.objects.first()
-    region_serializer = RegionSerializer(region_obj, many=False)
-    return JsonResponse(region_serializer.data, safe=False)
+    return JsonResponse(ret_dict, safe=False)
 
 
 # ## FILTERS ######################################################################################################### #
@@ -147,7 +178,7 @@ def timeseries_list_by_querystring(request):
 
     # only returns the header of the timeseries
     if location_id is None:
-        selected_timeseries = Timeseries.objects.filter(filter_set_id__id__contains=filter_id)
+        selected_timeseries = Timeseries.objects.filter(filter_set__id__contains=filter_id)
         timeseries_serializer = TimeseriesDatalessSerializer(selected_timeseries, many=True)
         if len(timeseries_serializer.data) == 0:
             return JsonResponse([], safe=False)
@@ -155,7 +186,7 @@ def timeseries_list_by_querystring(request):
 
     # return full content of the timeseries
     if location_id is not None:
-        all_timeseries = Timeseries.objects.filter(filter_set_id__id__contains=filter_id,
+        all_timeseries = Timeseries.objects.filter(filter_set__id__contains=filter_id,
                                                    header_location_id=location_id)
         timeseries_serializer = TimeseriesDatafullSerializer(all_timeseries, many=True)
         return JsonResponse(timeseries_serializer.data, safe=False)
@@ -190,7 +221,7 @@ def threshold_groups_list(request):
     
     # if filter was provided, get all timeseries of this filter and map:
     #   timeseries -> thresholdValueSet -> levelThresholdValues -> levelThresholds -> ThreshGroup
-    selected_timeseries = Timeseries.objects.filter(filter_set_id__id__contains=filter_id)
+    selected_timeseries = Timeseries.objects.filter(filter_set__id__contains=filter_id)
     selected_timeseries = TimeseriesDatalessSerializer(selected_timeseries, many=True).data
     level_threshold_ids = set()
     for sel_ts in selected_timeseries:

@@ -322,7 +322,21 @@ class TimeseriesDatafullSerializer(TimeseriesSerializerBase):
     """
     header = serializers.SerializerMethodField('get_header')
     events = TimeseriesEventSerializer(many=True)
+    thresholdValueSets = ThresholdValueSetSerializer(read_only=True, many=True)
 
     class Meta:
         model = Timeseries
-        fields = ('id', 'header', 'events')
+        fields = ('id', 'header', 'events', 'thresholdValueSets')
+
+
+class TimeseriesWithFiltersSerializer(TimeseriesSerializerBase):
+    """
+
+    """
+    header = serializers.SerializerMethodField('get_header')
+    thresholdValueSets = ThresholdValueSetSerializer(read_only=True, many=True)
+    filter_set = FilterSerializer(read_only=True, many=True)
+
+    class Meta:
+        model = Timeseries
+        fields = ('id', 'header', 'thresholdValueSets', 'filter_set')
