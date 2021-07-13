@@ -10,7 +10,7 @@ An endpoint in the *v1* subdomain is expected to behave and bring at least the s
 
 An endpoint in *v1dw* subdomain has specific content of the Drain Web (*dw*) API.
 
-**NOTE:** Please report any incompatibility between the *v1* entrypoints and the documented entrypoints of Delf-FEEWS. 
+**NOTE:** Please report any incompatibility between the *v1* entrypoints and the documented entrypoints of Delf-FEEWS.
 
 ## Endpoints already implemented
 
@@ -28,9 +28,22 @@ An endpoint with additional filters is yet to be implemented.
 
 Optional parameter:
 
-- **showAttributes \*:** Expected "true" or "false" [default].
+- **showAttributes:** Expects "true" or "false" [default].
 
 Example: ```http://.../v1/locations/?showAttributes=true```
+
+### http://.../v1dw/locations?showFilters=true
+
+Returns all available locations, with the particularity of allowing the retrieval of all filters to which the locations are associated.
+
+Optional parameter:
+
+- **showAttributes:** Expects "true" or "false" [default].
+- **showFilters:** Expects "true" or "false" [default].
+
+The use of ```showFilters=true``` makes the response time longer than without it due to the need of additional queries.
+
+Example: ```http://.../v1dw/locations/?showFilters=true```
 
 ### https://.../v1/filters
 
@@ -44,8 +57,8 @@ Should be used for listing available options only.
 
 Pretty similar to the aforementioned *http://.../v1/filters*, with the difference that it accepts the following parameters:
 
-- **includePolygon:** Expected "true" or "false" [default].
- 
+- **includePolygon:** Expects "true" or "false" [default].
+
 Example: ```http://.../v1dw/filters/?includePolygon=true```  
 
 ### https://.../v1/filter/*<id\>*
@@ -84,7 +97,7 @@ List all map extents.
 
 ### https://.../v1dw/threshold_groups
 
-List all threshold groups. It can be used to retrieve the options to be used for display state-dependent icons on maps. 
+List all threshold groups. It can be used to retrieve the options to be used for display state-dependent icons on maps.
 
 Defining the *filter id* restricts the number of entries returned to only the thresholds that are associated to at least one timeseries.
 
