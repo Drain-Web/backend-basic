@@ -87,7 +87,7 @@ def locations_with_filters(request):
 
     # include filters if requested
     if (show_filters is not None) and show_filters:
-        all_timeseries = Timeseries.objects.defer('events', 'thresholdValueSets').all()
+        all_timeseries = Timeseries.objects.defer('events', 'thresholdValueSets', 'filter_set__boundary').all()
         all_timeseries_serializer = TimeseriesWithFiltersSerializer(all_timeseries, many=True)
         del all_timeseries
         lib.include_filters_to_locations(ret_dict["locations"], all_timeseries_serializer.data)

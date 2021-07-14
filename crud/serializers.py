@@ -334,7 +334,7 @@ class TimeseriesWithFiltersSerializer(TimeseriesSerializerBase):
 
     """
     header = serializers.SerializerMethodField('get_header')
-    filter_set = FilterSerializer(read_only=True, many=True)
+    filter_set = FilterListItemSerializer(read_only=True, many=True)
 
     class Meta:
         model = Timeseries
