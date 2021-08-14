@@ -1,7 +1,7 @@
 {
 	"input_folder_path":              "toolbox\\fixture_converter-timeseries_csv\\input\\time_series",
 	"output_timeseries_folder_path":  "crud\\fixtures\\crud_fixture_timeseries\\z",
-	"output_geoevtfilters_file_path": "crud\\fixtures\\crud_prefixture_geoevts.json",
+	"output_geoevtfilters_file_path": "crud\\fixtures\\crud_prefixture_geoevts-Z.json",
 	"events": {
 		"datetime_format": "%Y-%m-%d %H:%M:%S",
 		"definitions": {
@@ -46,42 +46,50 @@
 		"Z_06797500.csv": {
 			"location": "usgs_06797500",
 			"stationName": "USGS-06797500",
-			"geoFilters": ["erb_all", "erb_m"]
+			"geoFilters": ["eer", "cer"],
+			"evtFilters": ["e2019mayMid", "e2020mayEnd", "e2020junEnd"]
 		},
 		"Z_06799000.csv": {
 			"location": "usgs_06799000",
 			"stationName": "USGS-06799000",
-			"geoFilters": ["erb_all", "erb_m"]
+			"geoFilters": ["eer", "cer"],
+			"evtFilters": ["e2019mayMid", "e2019julIni", "e2020mayEnd", "e2020junEnd"]
 		},
 		"Z_06799100.csv": {
 			"location": "usgs_06799100",
 			"stationName": "USGS-06799100",
-			"geoFilters": ["erb_all", "erb_m"]
+			"geoFilters": ["eer", "cer"],
+			"evtFilters": ["e2020mayEnd", "e2020junEnd"]
 		},
 		"Z_06799315.csv": {
 			"location": "usgs_06799315",
 			"stationName": "USGS-06799315",
-			"geoFilters": ["erb_all", "erb_s"]
+			"geoFilters": ["eer", "cer"],
+			"evtFilters": ["e2019mayMid", "e2019julIni", "e2020junEnd"]
 		},
 		"Z_06799350.csv": {
 			"location": "usgs_06799350",
 			"stationName": "USGS-06799350",
-			"geoFilters": ["erb_all", "erb_m"]
+			"geoFilters": ["eer", "cer"],
+			"evtFilters": ["e2019julIni", "e2020mayEnd", "e2020junEnd"]
 		},
 		"Z_06799445.csv": {
 			"location": "usgs_06799445",
 			"stationName": "USGS-06799445",
-			"geoFilters": ["erb_all", "erb_n"]
+			"geoFilters": ["eer", "lcd"],
+			"evtFilters": ["e2019julIni", "e2020junEnd"]
 		},
 		"Z_06799500.csv": {
 			"location": "usgs_06799500",
 			"stationName": "USGS-06799500",
-			"geoFilters": ["erb_all", "erb_n"]
+			"geoFilters": ["eer", "lcd"],
+			"evtFilters": ["e2019julIni", "e2020junEnd"]
 		},
 		"Z_06800000.csv": {
 			"location": "usgs_06800000",
 			"stationName": "USGS-06800000",
-			"geoFilters": ["erb_all", "erb_m"]
+			"geoFilters": ["eer", "mc"],
+			"evtFilters": ["e2019mayMid", "e2019julIni", "e2020junEnd"]
 		}
 	}
 }

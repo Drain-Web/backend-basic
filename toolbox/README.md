@@ -17,7 +17,13 @@ The expected sequence of runs is given in the end of this page.
 
 ### fixture\_converter\-timeseries\_csv.py
 
-Converts a single or a set of timeseries data in ```.csv``` file format to the ```.json``` format used as fixtures. 
+Converts a single or a set of timeseries data in ```.csv``` file format to the ```.json``` format used as fixtures.
+
+Example of use:
+
+    $ python toolbox/fixture_converter-timeseries_csv.py -request_filepath toolbox/fixture_converter-timeseries_csv/input/meta/import_request_M-hist01.json
+
+The call above creates the ```.json``` files in ```crud/fixtures/crud_fixture_timeseries/m-hist01/``` with the effective data timeseries and the file ```crud\fixtures\crud_prefixture_geoevts-M_hist01.json```
 
 ### fixture\_generator\-geoevtfilters.py
 

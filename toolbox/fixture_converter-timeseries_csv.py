@@ -102,6 +102,9 @@ def convert_one_csv_file(inp_fipa: str, out_fdpa: str, global_attr: dict,
     print("  ...read {0:,} rows from file '{1}'.".format(
         inp_df.shape[0], os.path.basename(inp_fipa)), flush=True)
 
+    # get related events
+    related_evts = set(file_attr["evtFilters"])
+
     # reduce pdf size if needed
     base_filename = base_filename[0:-4]
     count_out_files, geo_time_filters = 0, set()
@@ -114,6 +117,10 @@ def convert_one_csv_file(inp_fipa: str, out_fdpa: str, global_attr: dict,
 
         # iterate event by event
         for evt_id, evt_defs in evts_defs.items():
+
+            # check if this geoevent combination is valid
+            if evt_id not in related_evts:
+                continue
 
             # get ids and limit date times
             cur_filter_id, cur_filter_name = evt_id, evt_defs["filter_name"]
