@@ -72,6 +72,8 @@ class Location(models.Model):
     y = models.FloatField()
     relations = models.ArrayField(model_container=LocationRelation)
     attributes = models.ArrayField(model_container=LocationAttribute)
+    polygon = models.JSONField(null=True)
+    polygonDescription = models.CharField(max_length=200, null=True)
 
 
 class Map(models.Model):
