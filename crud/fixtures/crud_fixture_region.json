@@ -16,12 +16,12 @@
    "systemInformation": {
     "name": "Missouri River Tributaries"
    },
-   "map": "erb_all",
+   "map": "eer",
    "datetime": {
     "timezone": "GMT",
     "datetimeFormat": "yyyy-MM-dd HH:mm"
    },
-   "defaultFilter": "e2019julIni.erb_all"
+   "defaultFilter": "e2019julIni.err"
   }
  }
 ]
