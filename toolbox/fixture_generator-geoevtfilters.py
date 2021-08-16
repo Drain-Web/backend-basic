@@ -1,6 +1,7 @@
 from typing import Union
 import argparse
 import datetime
+import glob
 import json
 import os
 
@@ -21,8 +22,8 @@ _parser.add_argument('-request_filepath', metavar='request.json', type=str, requ
 _parser.add_argument('-geofilters_filepath', metavar='geofilters.json', type=str,
                      help='Path for the .json file with basic definitions of the '
                           'geofilters.', required=True)
-_parser.add_argument('-geoevents_list_filepath', metavar='crud_prefixture_geoevts.json',
-                     help='File created by "fixture_converter-timeseries_csv.py".',
+_parser.add_argument('-geoevents_list_glob', metavar='crud_prefixture_*.json',
+                     help='Glob to select the files created by the script "fixture_converter-timeseries_csv.py".', 
                      type=str, required=True)
 _parser.add_argument('-output_folderpath', metavar='/some/folder_path/',
                      help='Folder path in which output files will be created as output.',
@@ -122,6 +123,22 @@ def generate_geoevent_dict(geo_evt_id: str, request_info: dict, geo_filters: dic
     return ret_dict
 
 
+# ## DEFS ############################################################################### #
+
+def read_all_geoevents_list(glob_pattern: str) -> list:
+    ret_set = set()
+    all_geoenv_fipas = glob.glob(glob_pattern)
+    print("Reading geoevents from %d files..." % len(all_geoenv_fipas))
+    for cur_geoenv_fipa in all_geoenv_fipas:
+        print(" ...read: %s." % os.path.basename(cur_geoenv_fipa))
+        with open(cur_geoenv_fipa, "r") as r_file:
+            cur_geoevt_list = json.load(r_file)
+        ret_set.update(cur_geoevt_list)
+        del cur_geoenv_fipa, cur_geoevt_list
+
+    return list(ret_set)
+
+
 # ## MAIN ############################################################################### #
 
 if __name__ == "__main__":
@@ -135,8 +152,7 @@ if __name__ == "__main__":
         _reqest_dict = json.load(_r_file)
     with open(_args.geofilters_filepath, "r") as _r_file:
         _geoflt_dict = json.load(_r_file)
-    with open(_args.geoevents_list_filepath, "r") as _r_file:
-        _geoevt_list = json.load(_r_file)
+    _geoevt_list = read_all_geoevents_list(_args.geoevents_list_glob)
     _output_fdpa = _args.output_folderpath
     del _parser, _args
 

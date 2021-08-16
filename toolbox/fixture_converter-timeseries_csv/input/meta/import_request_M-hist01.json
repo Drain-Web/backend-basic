@@ -47,7 +47,7 @@
 			"location": "usgs_06797500",
 			"stationName": null,
 			"geoFilters": ["eer", "cer"],
-			"evtFilters": ["e2019mayMid", "e2020mayEnd", "e2020junEnd"]
+			"evtFilters": ["e2019mayMid", "e2019julIni", "e2020mayEnd", "e2020junEnd"]
 		},
 		"qsim_50301.csv": {
 			"location": "usgs_06799000",
@@ -59,37 +59,37 @@
 			"location": "usgs_06799100",
 			"stationName": null,
 			"geoFilters": ["eer", "cer"],
-			"evtFilters": ["e2020mayEnd", "e2020junEnd"]
+			"evtFilters": ["e2019mayMid", "e2019julIni", "e2020mayEnd", "e2020junEnd"]
 		},
 		"qsim_51645.csv": {
 			"location": "usgs_06799315",
 			"stationName": null,
 			"geoFilters": ["eer", "cer"],
-			"evtFilters": ["e2019mayMid", "e2019julIni", "e2020junEnd"]
+			"evtFilters": ["e2019mayMid", "e2019julIni", "e2020mayEnd", "e2020junEnd"]
 		},
 		"qsim_34424.csv": {
 			"location": "usgs_06799350",
 			"stationName": null,
 			"geoFilters": ["eer", "cer"],
-			"evtFilters": ["e2019julIni", "e2020mayEnd", "e2020junEnd"]
+			"evtFilters": ["e2019mayMid", "e2019julIni", "e2020mayEnd", "e2020junEnd"]
 		},
 		"qsim_65483.csv": {
 			"location": "usgs_06799445",
 			"stationName": null,
 			"geoFilters": ["eer", "lcd"],
-			"evtFilters": ["e2019julIni", "e2020junEnd"]
+			"evtFilters": []
 		},
 		"qsim_29742.csv": {
 			"location": "usgs_06799500",
 			"stationName": null,
 			"geoFilters": ["eer", "lcd"],
-			"evtFilters": ["e2019julIni", "e2020junEnd"]
+			"evtFilters": []
 		},
 		"qsim_17225.csv": {
 			"location": "usgs_06800000",
 			"stationName": null,
 			"geoFilters": ["eer", "mc"],
-			"evtFilters": ["e2019mayMid", "e2019julIni", "e2020junEnd"]
+			"evtFilters": ["e2019mayMid", "e2019julIni", "e2020mayEnd", "e2020junEnd"]
 		}
 	}
 }
