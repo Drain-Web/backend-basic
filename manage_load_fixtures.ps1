@@ -72,4 +72,11 @@ Foreach-Object {
 }
 echo ""
 
+Get-ChildItem ".\crud\fixtures\crud_fixture_timeseries\m-hist01" -Filter *.json | 
+Foreach-Object {
+  echo "Inserting timeseries $($_.Name)..."
+  python .\manage.py loaddata $_.FullName
+}
+echo ""
+
 echo "Finished loading fixtures."
