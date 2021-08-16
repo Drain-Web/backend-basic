@@ -34,6 +34,14 @@ If you are using **conda** and **pip** on Linux, the same steps would be:
     $ pip install -r requirements.txt
 
 
+## Activating local development server
+
+As a typical Django system, the command:
+
+    $ python .\manage.py runserver
+
+starts a local server that can be accessed at ```http://127.0.0.1:8000/```.
+
 ## Deploying
 
 As a typical Django project, we need to run:

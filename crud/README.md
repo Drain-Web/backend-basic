@@ -40,6 +40,7 @@ Optional parameter:
 
 - **showAttributes:** Expects "true" or "false" [default].
 - **showFilters:** Expects "true" or "false" [default].
+- **showPolygons:** Expects "true" or "false" [default].
 
 The use of ```showFilters=true``` makes the response time longer than without it due to the need of additional queries.
 

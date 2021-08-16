@@ -31,6 +31,16 @@ Generates the geo-event filters.
 
 It depends on the files created in a run of ```fixture_converter-timeseries_csv.py```.
 
+Example of use:
+
+    $ python toolbox/fixture_generator-geoevtfilters.py 
+       -request_filepath toolbox/fixture_converter-timeseries_csv/input/meta/import_request.json 
+       -geoevents_lists_glob crud/fixtures/crud_prefixture_geoevts-*.json
+       -geofilters_filepath toolbox/fixture_converter-timeseries_csv/input/meta/geo-filters.json
+       -output_folderpath crud/fixtures/
+
+The call above creates the file ```crud/fixtures/crud_fixtureAuto_geoevts.json```.
+
 ### fixture\_cleaner\-intermediate\-files.py
 
 Removes temporary files created after a success of ```fixture_converter-timeseries_csv.py``` and ```fixture_generator-geoevtfilters.py``` scripts.
@@ -52,6 +62,13 @@ Given a ```.geojson``` file with the content:
 It can be reduced to have its precision reduced to 3 decimal places, becoming:
 
 	[[-90.123, 45.654], [-91.000, 45.555]]
+
+Example of use:
+
+    python toolbox/geojson_precision_reducer.py 
+     -input_filepath toolbox/geojson_precision_reducer/input/polygon_general_simplified1000m_M_WGS84.geojson 
+     -output_filepath toolbox/geojson_precision_reducer/output/polygon_general_simplified1000m_M_WGS84.geojson
+     -decimal_places 3
 
 
 ## Expected sequence of calls
