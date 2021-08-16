@@ -71,6 +71,37 @@ class LocationWithAttrSerializer(serializers.ModelSerializer):
         return obj.name
 
 
+class LocationDynamicSerializer(serializers.ModelSerializer):
+    locationId = serializers.SerializerMethodField('get_location_id')
+    shortName = serializers.SerializerMethodField('get_location_name')
+    relations = LocationRelationSerializer(many=True)
+    attributes = LocationAttributeSerializer(many=True)
+
+    def __init__(self, *args, **kwargs):
+        # Don't pass the 'fields' arg up to the superclass
+        fields = kwargs.pop('fields', None)
+
+        # Instantiate the superclass normally
+        super(LocationDynamicSerializer, self).__init__(*args, **kwargs)
+
+        if fields is not None:
+            # Drop any fields that are not specified in the `fields` argument.
+            allowed = set(fields)
+            existing = set(self.fields.keys())
+            for field_name in existing - allowed:
+                self.fields.pop(field_name)
+
+    class Meta:
+        model = Location
+        fields = '__all__'
+
+    def get_location_id(self, obj):
+        return obj.id
+
+    def get_location_name(self, obj):
+        return obj.name
+
+
 # ## BOUNDARY ######################################################################################################## #
 
 class BoundarySerializer(serializers.ModelSerializer):

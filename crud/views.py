@@ -5,14 +5,15 @@ from crud.models import ThresholdValueSet, LevelThreshold
 
 from rest_framework.decorators import api_view
 from django.http.response import JsonResponse
-from crud.serializers import BoundarySerializer, FilterSerializer, LocationSerializer, LocationWithAttrSerializer
+from crud.serializers import BoundarySerializer, FilterSerializer
+from crud.serializers import LocationSerializer, LocationWithAttrSerializer, LocationDynamicSerializer
 from crud.serializers import TimeseriesDatalessSerializer, TimeseriesDatafullSerializer
 from crud.serializers import TimeseriesWithFiltersSerializer, TimeseriesParameterSerializer
 from crud.serializers import FilterListItemSerializer, MapSerializer, RegionSerializer
 from crud.serializers import ThresholdGroupSerializer, ThresholdValueSetSerializer, LevelThresholdSerializer
 from rest_framework import status
 import crud.libs.views_lib as lib
-from typing import List
+from typing import List, Union
 
 import copy
 
@@ -20,6 +21,13 @@ import copy
 
 API_VERSION = "1.25"
 GEO_DATUM = "WGS 1984"
+
+# ## DEFS ############################################################################################################ #
+
+def get_bool(query_attr_value: Union[None, str]) -> bool:
+    if (query_attr_value is None) or (query_attr_value not in {'true', 'True'}):
+        return False
+    return True
 
 
 # ## MAPS ############################################################################################################ #
@@ -69,16 +77,26 @@ def location(request):
 
 
 @api_view(['GET'])
-def locations_with_filters(request):
-    show_attr = request.GET.get('showAttributes')
-    show_filters = request.GET.get('showFilters')
+def locations_dynamic(request):
+    fields_show = ['locationId', 'shortName', 'relations', 'x', 'y']
+    fields_call = ['id', 'name', 'relations', 'x', 'y']
 
-    # list all locations
-    locs = Location.objects.all()
-    if (show_attr is not None) and show_attr:
-        locs_serializer = LocationWithAttrSerializer(locs, many=True)
-    else:
-        locs_serializer = LocationSerializer(locs, many=True)
+    # get requests
+    show_attr = get_bool(request.GET.get('showAttributes'))
+    show_filters = get_bool(request.GET.get('showFilters'))
+    show_polygon = get_bool(request.GET.get('showPolygon'))
+
+    # decide what to show and what to request
+    if show_attr:
+        fields_show.append('attributes')
+        fields_call.append('attributes')
+    if show_polygon:
+        fields_show.extend(['polygon', 'polygonDescription'])
+        fields_call.extend(['polygon', 'polygonDescription'])
+
+    # call query
+    locs = Location.objects.all().only(*fields_call)
+    locs_serializer = LocationDynamicSerializer(locs, many=True, fields=fields_show)
     ret_dict = {
         "version": API_VERSION,
         "geoDatum": "WGS 1984",
@@ -86,7 +104,7 @@ def locations_with_filters(request):
     }
 
     # include filters if requested
-    if (show_filters is not None) and show_filters:
+    if show_filters:
         all_timeseries = Timeseries.objects.defer('events', 'thresholdValueSets', 'filter_set__boundary').all()
         all_timeseries_serializer = TimeseriesWithFiltersSerializer(all_timeseries, many=True)
         del all_timeseries
