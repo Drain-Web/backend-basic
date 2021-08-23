@@ -1,11 +1,14 @@
 #!/bin/bash
 
+
 echo "Ensure you are calling this script with the proper Python environment activated."
 echo ""
 
 echo "Cleaning database..."
 python ./manage.py flush
 echo ""
+
+
 
 echo "Inserting threshold warning levels..."
 python ./manage.py loaddata ./crud/fixtures/crud_fixture_thresholdWarningLevel.json
@@ -28,7 +31,7 @@ python ./manage.py loaddata ./crud/fixtures/crud_fixture_thresholdValueSets.json
 echo ""
 
 echo "Inserting boundaries..."
-python manage.py loaddata ./crud/fixtures/crud_fixtureAuto_boundaries.json
+python ./manage.py loaddata ./crud/fixtures/crud_fixtureAuto_boundaries.json
 echo ""
 
 echo "Inserting map extents..."
@@ -63,6 +66,13 @@ done
 echo ""
 
 for json_file in ./crud/fixtures/crud_fixture_timeseries/z/*.json; do
+  json_file_name=$(basename -- "$json_file")
+  echo "Inserting timeseries ${json_file_name}..."
+  python ./manage.py loaddata ${json_file}
+done
+echo ""
+
+for json_file in ./crud/fixtures/crud_fixture_timeseries/m-hist01/*.json; do
   json_file_name=$(basename -- "$json_file")
   echo "Inserting timeseries ${json_file_name}..."
   python ./manage.py loaddata ${json_file}
