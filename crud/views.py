@@ -1,6 +1,6 @@
 from django.shortcuts import render
 
-from crud.models import Boundary, Filter, Location, Map, Region, Timeseries, TimeseriesParameter, ThresholdGroup
+from crud.models import Boundary, Filter, Location, Map, Region, Timeseries, TimeseriesParameter, ParameterGroup
 from crud.models import ThresholdValueSet, LevelThreshold
 
 from rest_framework.decorators import api_view
@@ -10,7 +10,7 @@ from crud.serializers import LocationSerializer, LocationWithAttrSerializer, Loc
 from crud.serializers import TimeseriesDatalessSerializer, TimeseriesDatafullSerializer
 from crud.serializers import TimeseriesWithFiltersSerializer, TimeseriesParameterSerializer
 from crud.serializers import FilterListItemSerializer, MapSerializer, RegionSerializer
-from crud.serializers import ThresholdGroupSerializer, ThresholdValueSetSerializer, LevelThresholdSerializer
+from crud.serializers import ParameterGroupSerializer, ThresholdValueSetSerializer, LevelThresholdSerializer
 from rest_framework import status
 import crud.libs.views_lib as lib
 from typing import List, Union
@@ -182,6 +182,17 @@ def list_parameters(request):
     return JsonResponse(ret_dict, safe=False)
 
 
+@api_view(['GET'])
+def list_parameter_groups(request):
+    all_parameter_groups = ParameterGroup.objects.all()
+    parameter_groups_serializer = ParameterGroupSerializer(all_parameter_groups, many=True)
+    ret_dict = {
+        "version": API_VERSION,
+        "parameterGroups": parameter_groups_serializer.data
+    }
+    return JsonResponse(ret_dict, safe=False)
+
+
 # ## TIMESERIES ###################################################################################################### #
 
 @api_view(['GET'])
@@ -218,7 +229,11 @@ def timeseries_list_by_querystring(request):
 def threshold_value_sets_list(request):
     all_threshold_value_sets = ThresholdValueSet.objects.all()
     all_threshold_value_sets_serializer = ThresholdValueSetSerializer(all_threshold_value_sets, many=True)
-    return JsonResponse(all_threshold_value_sets_serializer.data, safe=False)
+    base_ret_dict = {
+        "version": API_VERSION,
+        "thresholdValueSets": all_threshold_value_sets_serializer.data
+    }
+    return JsonResponse(base_ret_dict, safe=False)
 
 
 @api_view(['GET'])

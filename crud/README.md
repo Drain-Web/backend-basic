@@ -96,6 +96,10 @@ Lists all filter boundaries with their polygons.
 
 List all map extents.
 
+### https://.../v1dw/parameter_groups
+
+List all parameter groups.
+
 ### https://.../v1dw/threshold_groups
 
 List all threshold groups. It can be used to retrieve the options to be used for display state-dependent icons on maps.
@@ -107,3 +111,18 @@ Optional parameter:
 - **filter:** Filter Id
 
 Example: ```https://.../v1dw/threshold_groups?filter=alpha```
+
+### http://.../v1dw/threshold_value_sets 
+
+List all sets of values for timeseries thresholds.
+
+Each *value set* has a set of threshold values (*levelThresholdValues*).
+
+Each value set has an id and a value function (*valueFunction*). Value functions have the pattern:
+
+- if is a string surrounded by ```@```:
+    - the value is location-dependent;
+    - the inner string is the attribute field of the location that holds its value;
+    - E.g.: ```"@floodHraw@"``` says that this value is in the location's attribute ```floodHraw```.
+- if is a raw number (integer or float):
+    - this value is constant for all locations.

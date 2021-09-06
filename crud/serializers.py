@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from crud.models import Boundary, DatetimeDefinition, Filter, Location, Map, Region, SystemInformation
+from crud.models import Boundary, DatetimeDefinition, Filter, Location, Map, ParameterGroup, Region, SystemInformation
 from crud.models import Timeseries, TimeseriesEvent, TimeseriesTimestep, TimeseriesParameter, LocationRelation
 from crud.models import ThresholdGroup, ThresholdValueSet, LevelThreshold, LevelThresholdValue, ThresholdWarningLevel
 from crud.models import LocationAttribute
@@ -283,6 +283,15 @@ class ThresholdValueSetSerializer(serializers.ModelSerializer):
 
 
 # ## TIMESERIES ###################################################################################################### #
+
+class ParameterGroupSerializer(serializers.ModelSerializer):
+    """
+    """
+
+    class Meta:
+        model = ParameterGroup
+        fields = ("id", "parameterType", "unit", "displayUnit", "valueResolution", "usesDatum")
+
 
 class TimeseriesParameterSerializer(serializers.ModelSerializer):
     """
