@@ -142,6 +142,12 @@ class LocationSet(models.Model):
     name = models.CharField(max_length=70, default='')
 
 
+class ModuleInstance(models.Model):
+    id = models.CharField(max_length=50, primary_key=True)
+    name = models.CharField(max_length=50)
+    description = models.CharField(max_length=200)
+
+
 class Region(models.Model):
     # derived from SystemConfigFiles/Explorer.xml
     systemInformation = models.EmbeddedField(model_container=SystemInformation)
@@ -176,6 +182,7 @@ class Timeseries(models.Model):
     header_units = models.CharField(max_length=10, default='')
     header_missVal = models.FloatField()
     header_type = models.CharField(max_length=20, default='')
+    header_moduleInstanceId = models.CharField(max_length=50, default='')
     header_parameterId = models.ForeignKey(TimeseriesParameter, on_delete=models.CASCADE, null=True)
     header_stationName = models.CharField(max_length=20, default='')
     header_location = models.ForeignKey(Location, on_delete=models.CASCADE, null=True)

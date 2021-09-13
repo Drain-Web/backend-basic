@@ -33,7 +33,6 @@ If you are using **conda** and **pip** on Linux, the same steps would be:
     $ while read requirement; do conda install --yes $requirement; done < requirements.txt
     $ pip install -r requirements.txt
 
-
 ## Activating local development server
 
 As a typical Django system, the command:

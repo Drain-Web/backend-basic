@@ -8,7 +8,9 @@ echo "Cleaning database..."
 python ./manage.py flush
 echo ""
 
-
+echo "Inserting module instances..."
+python ./manage.py loaddata ./crud/fixtures/crud_fixture_moduleInstances.json
+echo ""
 
 echo "Inserting threshold warning levels..."
 python ./manage.py loaddata ./crud/fixtures/crud_fixture_thresholdWarningLevel.json

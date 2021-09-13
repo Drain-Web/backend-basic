@@ -209,7 +209,7 @@ class RegionSerializer(serializers.ModelSerializer):
         fields = ("systemInformation", "datetime", "map", "defaultFilter")
 
     def get_default_filter_id(self, obj):
-        return obj.defaultFilter.id
+        return obj.defaultFilter_id
 
 
 # ## THRESHOLDS ###################################################################################################### #

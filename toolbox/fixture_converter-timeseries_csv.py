@@ -1,5 +1,5 @@
 import random
-from typing import Union
+from typing import Union, Tuple
 import pandas as pd
 import argparse
 import datetime
@@ -32,7 +32,7 @@ IS_DEBUGGING = False
 
 # ## DEFS ############################################################################### #
 
-def convert_all_csv_files(args_dict: dict) -> (int, set):
+def convert_all_csv_files(args_dict: dict) -> Tuple[int, set]:
     """
     One-time-per request file call.
     :param args_dict:
@@ -75,7 +75,7 @@ def convert_all_csv_files(args_dict: dict) -> (int, set):
 
 
 def convert_one_csv_file(inp_fipa: str, out_fdpa: str, global_attr: dict,
-                         file_attr: dict, events_dict: Union[dict, None]) -> (int, set):
+                         file_attr: dict, events_dict: Union[dict, None]) -> Tuple[int, set]:
     """
     Called sequentially by convert_all_csv_files()
     :param inp_fipa:
@@ -205,10 +205,11 @@ def convert_df_to_timeseries(data_df: pd.DataFrame, global_attr: dict, station_n
     out_dict = {
         "model": MONGODB_MODEL,
         "fields": {
-            "header_units": global_attr["timeStep"]["unit"],
+            "header_units": global_attr["unit"],
             "header_missVal": global_attr["missVal"],
             "header_type": global_attr["type"],
             "header_parameterId": global_attr["parameterId"],
+            "header_moduleInstanceId": global_attr["moduleInstanceId"],
             "header_stationName": station_name,
             "header_location": location_id,
             "header_timeStep_unit": global_attr["timeStep"]["unit"],
