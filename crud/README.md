@@ -126,3 +126,7 @@ Each value set has an id and a value function (*valueFunction*). Value functions
     - E.g.: ```"@floodHraw@"``` says that this value is in the location's attribute ```floodHraw```.
 - if is a raw number (integer or float):
     - this value is constant for all locations.
+
+### http://.../v1dw/module_instances
+
+List all module instances registered in the system.
