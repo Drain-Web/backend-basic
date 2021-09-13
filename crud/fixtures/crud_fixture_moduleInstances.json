@@ -1,0 +1,17 @@
+[
+ {
+  "model": "crud.moduleinstance",
+  "fields": {
+   "id": "ImportUSGSobs",
+   "name": "RAW USGS Obs.",
+   "description": "Raw USGS Observations" 
+  }
+ }, {
+  "model": "crud.moduleinstance",
+  "fields": {
+   "id": "ImportHLModelHist01",
+   "name": "RAW HLM Hist. 01",
+   "description": "RAW HLM historical simulation 01"
+  }
+ }
+]
