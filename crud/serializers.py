@@ -2,7 +2,7 @@ from rest_framework import serializers
 from crud.models import Boundary, DatetimeDefinition, Filter, Location, Map, ParameterGroup, Region, SystemInformation
 from crud.models import Timeseries, TimeseriesEvent, TimeseriesTimestep, TimeseriesParameter, LocationRelation
 from crud.models import ThresholdGroup, ThresholdValueSet, LevelThreshold, LevelThresholdValue, ThresholdWarningLevel
-from crud.models import LocationAttribute
+from crud.models import LocationAttribute, ModuleInstance
 
 
 # ## GENERAL ######################################################################################################### #
@@ -12,6 +12,13 @@ class DatetimeDefinitionSerializer(serializers.ModelSerializer):
     class Meta:
         model = DatetimeDefinition
         fields = ('timezone', 'datetimeFormat')
+
+
+class ModuleInstanceSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ModuleInstance
+        fields = ('id', 'name', 'description')
 
 
 # ## LOCATION ######################################################################################################## #
@@ -336,6 +343,7 @@ class TimeseriesSerializerBase(serializers.ModelSerializer):
             "missVal": obj.header_missVal,
             "type": obj.header_type,
             "parameterId": obj.header_parameterId.id,
+            "moduleInstanceId": obj.header_moduleInstanceId,
             "stationName": obj.header_stationName,
             "location_id": obj.header_location_id,
             "timeStep": {

@@ -16,7 +16,8 @@ urlpatterns = [
     path(r'v1dw/boundaries', views.bondary_list),
     path(r'v1dw/filters/', views.filter_list_by_querystring),
     path(r'v1dw/maps/', views.maps_list),
-    path(r'v1dw/parameter_groups/', views.list_parameter_groups)
+    path(r'v1dw/parameter_groups/', views.list_parameter_groups),
+    path(r'v1dw/module_instances', views.module_instances)
 ]
 
 # path(r'v1dw/locations', views.locations_with_filters),

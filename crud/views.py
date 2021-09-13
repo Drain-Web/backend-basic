@@ -1,7 +1,7 @@
 from django.shortcuts import render
 
 from crud.models import Boundary, Filter, Location, Map, Region, Timeseries, TimeseriesParameter, ParameterGroup
-from crud.models import ThresholdValueSet, LevelThreshold
+from crud.models import ThresholdValueSet, LevelThreshold, ModuleInstance
 
 from rest_framework.decorators import api_view
 from django.http.response import JsonResponse
@@ -9,7 +9,7 @@ from crud.serializers import BoundarySerializer, FilterSerializer
 from crud.serializers import LocationSerializer, LocationWithAttrSerializer, LocationDynamicSerializer
 from crud.serializers import TimeseriesDatalessSerializer, TimeseriesDatafullSerializer
 from crud.serializers import TimeseriesWithFiltersSerializer, TimeseriesParameterSerializer
-from crud.serializers import FilterListItemSerializer, MapSerializer, RegionSerializer
+from crud.serializers import FilterListItemSerializer, MapSerializer, RegionSerializer, ModuleInstanceSerializer
 from crud.serializers import ParameterGroupSerializer, ThresholdValueSetSerializer, LevelThresholdSerializer
 from rest_framework import status
 import crud.libs.views_lib as lib
@@ -29,6 +29,15 @@ def get_bool(query_attr_value: Union[None, str]) -> bool:
         return False
     return True
 
+
+# ## 
+
+@api_view(['GET'])
+def module_instances(request):
+
+    module_instances = ModuleInstance.objects.all()
+    module_instance_serializer = ModuleInstanceSerializer(module_instances, many=True)
+    return JsonResponse(module_instance_serializer.data, safe=False)
 
 # ## MAPS ############################################################################################################ #
 
