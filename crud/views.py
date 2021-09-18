@@ -1,16 +1,18 @@
 from django.shortcuts import render
 
-from crud.models import Boundary, Filter, Location, Map, Region, Timeseries, TimeseriesParameter, ParameterGroup
-from crud.models import ThresholdValueSet, LevelThreshold, ModuleInstance
+from crud.models import Boundary, Filter, Location, Map, Region, Timeseries, TimeseriesParameter
+from crud.models import ThresholdValueSet, LevelThreshold, ModuleInstance, ParameterGroup
 
 from rest_framework.decorators import api_view
 from django.http.response import JsonResponse
 from crud.serializers import BoundarySerializer, FilterSerializer
-from crud.serializers import LocationSerializer, LocationWithAttrSerializer, LocationDynamicSerializer
-from crud.serializers import TimeseriesDatalessSerializer, TimeseriesDatafullSerializer
+from crud.serializers import LocationSerializer, LocationWithAttrSerializer
+from crud.serializers import LocationDynamicSerializer, TimeseriesDatafullSerializer
+from crud.serializers import TimeseriesDatalessSerializer, TimeseriesDatalessStatisticsSerializer
 from crud.serializers import TimeseriesWithFiltersSerializer, TimeseriesParameterSerializer
-from crud.serializers import FilterListItemSerializer, MapSerializer, RegionSerializer, ModuleInstanceSerializer
-from crud.serializers import ParameterGroupSerializer, ThresholdValueSetSerializer, LevelThresholdSerializer
+from crud.serializers import FilterListItemSerializer, MapSerializer, RegionSerializer
+from crud.serializers import ModuleInstanceSerializer, LevelThresholdSerializer
+from crud.serializers import ParameterGroupSerializer, ThresholdValueSetSerializer
 from rest_framework import status
 import crud.libs.views_lib as lib
 from typing import List, Union
@@ -208,6 +210,7 @@ def list_parameter_groups(request):
 def timeseries_list_by_querystring(request):
     filter_id = request.GET.get('filter')
     location_id = request.GET.get('location')
+    show_statistics = request.GET.get('showStatistics')
 
     # basic check - must provide a filter
     if filter_id is None:
@@ -216,8 +219,12 @@ def timeseries_list_by_querystring(request):
 
     # only returns the header of the timeseries
     if location_id is None:
-        selected_timeseries = Timeseries.objects.filter(filter_set__id__contains=filter_id)
-        timeseries_serializer = TimeseriesDatalessSerializer(selected_timeseries, many=True)
+        if (show_statistics is None) or (not show_statistics):
+            selected_timeseries = Timeseries.objects.defer('events').filter(filter_set__id__contains=filter_id)
+            timeseries_serializer = TimeseriesDatalessSerializer(selected_timeseries, many=True)
+        else:
+            selected_timeseries = Timeseries.objects.filter(filter_set__id__contains=filter_id)
+            timeseries_serializer = TimeseriesDatalessStatisticsSerializer(selected_timeseries, many=True)
         if len(timeseries_serializer.data) == 0:
             return JsonResponse([], safe=False)
         return JsonResponse(timeseries_serializer.data, safe=False)

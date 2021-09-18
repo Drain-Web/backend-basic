@@ -337,6 +337,9 @@ class TimeseriesSerializerBase(serializers.ModelSerializer):
     Parent class of the serializers effectivelly used.
     """
 
+    FIELDS_BASE = ['id', 'header', 'thresholdValueSets']
+    FIELDS_STATISTICS = ['firstValueTime', 'lastValueTime', 'maxValue', 'minValue', 'valueCount']
+
     def get_header(self, obj):
         return {
             "units": obj.header_units,
@@ -351,6 +354,23 @@ class TimeseriesSerializerBase(serializers.ModelSerializer):
             }
         }
 
+    def get_firstValueTime(self, obj):
+        return obj.events[0]["value"] if len(obj.events) > 0 else None
+
+    def get_lastValueTime(self, obj):
+        return obj.events[-1]["value"] if len(obj.events) > 0 else None
+
+    def get_maxValue(self, obj):
+        all_values = [evt["value"] for evt in obj.events]
+        return max(all_values) if len(all_values) > 0 else None
+
+    def get_minValue(self, obj):
+        all_values = [evt["value"] for evt in obj.events]
+        return min(all_values) if len(all_values) > 0 else None
+
+    def get_valueCount(self, obj):
+        return len(obj.events)
+
 
 class TimeseriesDatalessSerializer(TimeseriesSerializerBase):
     """
@@ -362,6 +382,25 @@ class TimeseriesDatalessSerializer(TimeseriesSerializerBase):
     class Meta:
         model = Timeseries
         fields = ('id', 'header', 'thresholdValueSets')
+
+
+class TimeseriesDatalessStatisticsSerializer(TimeseriesSerializerBase):
+    """
+    
+    """
+
+    header = serializers.SerializerMethodField('get_header')
+    thresholdValueSets = ThresholdValueSetSerializer(read_only=True, many=True)
+    firstValueTime = serializers.SerializerMethodField('get_firstValueTime')
+    lastValueTime = serializers.SerializerMethodField('get_lastValueTime')
+    maxValue = serializers.SerializerMethodField('get_maxValue')
+    minValue = serializers.SerializerMethodField('get_minValue')
+    valueCount = serializers.SerializerMethodField('get_valueCount')
+    
+    class Meta:
+        model = Timeseries
+        fields = tuple(TimeseriesSerializerBase.FIELDS_BASE + 
+                       TimeseriesSerializerBase.FIELDS_STATISTICS)
 
 
 class TimeseriesDatafullSerializer(TimeseriesSerializerBase):

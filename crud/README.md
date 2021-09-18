@@ -38,9 +38,9 @@ Returns all available locations, with the particularity of allowing the retrieva
 
 Optional parameter:
 
-- **showAttributes:** Expects "true" or "false" [default].
-- **showFilters:** Expects "true" or "false" [default].
-- **showPolygons:** Expects "true" or "false" [default].
+- **showAttributes:** Expects ```true``` or ```false``` [default].
+- **showFilters:** Expects ```true``` or ```false``` [default].
+- **showPolygons:** Expects ```true``` or ```false``` [default].
 
 The use of ```showFilters=true``` makes the response time longer than without it due to the need of additional queries.
 
@@ -58,7 +58,7 @@ Should be used for listing available options only.
 
 Pretty similar to the aforementioned *http://.../v1/filters*, with the difference that it accepts the following parameters:
 
-- **includePolygon:** Expects "true" or "false" [default].
+- **includePolygon:** Expects ```true``` or ```false``` [default].
 
 Example: ```http://.../v1dw/filters/?includePolygon=true```  
 
@@ -82,11 +82,16 @@ Example: ```http://.../v1/timeseries/?filter=alpha&location=beta```
 
 Mandatory parameter:
 
-- **filter:** Filter Id
+- **filter:** Filter Id.
 
 Optional parameters:
 
 - **location:** Location Id.
+
+- **showStatistics:**  Expects ```true``` or ```false``` [default].
+
+    - If ```true```, the additional fields ```firstValueTime```, ```lastValueTime```, ```maxValue```, ```minValue```, ```valueCount``` are included in the response data.
+    - Ignored if the argument ```location``` is provided.
 
 ### https://.../v1dw/boundaries
 
