@@ -1,7 +1,7 @@
 {
-	"input_folder_path":              "toolbox\\fixture_converter-timeseries_csv\\input\\time_series",
-	"output_timeseries_folder_path":  "crud\\fixtures\\crud_fixture_timeseries\\m-hist01",
-	"output_geoevtfilters_file_path": "crud\\fixtures\\crud_prefixture_geoevts-M_hist01.json",
+	"input_folder_path":              "toolbox/fixture_converter-timeseries_csv/input/time_series",
+	"output_timeseries_folder_path":  "crud/fixtures/crud_fixture_timeseries/m-hist01",
+	"output_geoevtfilters_file_path": "crud/fixtures/crud_prefixture_geoevts-M_hist01.json",
 	"events": {
 		"datetime_format": "%Y-%m-%d %H:%M:%S",
 		"definitions": {
@@ -30,6 +30,7 @@
 	"global": {
 		"type": "instantaneous",
 		"parameterId": "Q.sim",
+		"moduleInstanceId": "ImportHLModelHist01",
 		"unit": "m3/s",
 		"datetime_column_id": "date",
 		"datetime_format": "%Y-%m-%d %H:%M",

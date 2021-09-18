@@ -1,7 +1,7 @@
 {
-	"input_folder_path":              "toolbox\\fixture_converter-timeseries_csv\\input\\time_series",
-	"output_timeseries_folder_path":  "crud\\fixtures\\crud_fixture_timeseries\\z",
-	"output_geoevtfilters_file_path": "crud\\fixtures\\crud_prefixture_geoevts-Z.json",
+	"input_folder_path":              "toolbox/fixture_converter-timeseries_csv/input/time_series",
+	"output_timeseries_folder_path":  "crud/fixtures/crud_fixture_timeseries/z",
+	"output_geoevtfilters_file_path": "crud/fixtures/crud_prefixture_geoevts-Z.json",
 	"events": {
 		"datetime_format": "%Y-%m-%d %H:%M:%S",
 		"definitions": {
@@ -30,6 +30,7 @@
 	"global": {
 		"type": "instantaneous",
 		"parameterId": "H.obs",
+		"moduleInstanceId": "ImportUSGSobs",
 		"unit": "m",
 		"datetime_column_id": "Unnamed: 0",
 		"datetime_format": "%Y-%m-%d %H:%M:%S",
