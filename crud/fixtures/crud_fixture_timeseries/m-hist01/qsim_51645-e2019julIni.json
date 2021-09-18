@@ -2,10 +2,11 @@
     {
         "model": "crud.timeseries",
         "fields": {
-            "header_units": "hour",
+            "header_units": "m3/s",
             "header_missVal": -999,
             "header_type": "instantaneous",
             "header_parameterId": "Q.sim",
+            "header_moduleInstanceId": "ImportHLModelHist01",
             "header_stationName": null,
             "header_location": "usgs_06799315",
             "header_timeStep_unit": "hour",

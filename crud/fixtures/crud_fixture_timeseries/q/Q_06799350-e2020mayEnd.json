@@ -2,10 +2,11 @@
     {
         "model": "crud.timeseries",
         "fields": {
-            "header_units": "nonequidistant",
+            "header_units": "m3/s",
             "header_missVal": -999,
             "header_type": "instantaneous",
             "header_parameterId": "Q.obs",
+            "header_moduleInstanceId": "ImportUSGSobs",
             "header_stationName": "USGS-06799350",
             "header_location": "usgs_06799350",
             "header_timeStep_unit": "nonequidistant",
