@@ -142,20 +142,26 @@ Returns the results of a specified calculation involving two or more groups of t
 
 All timeseries associated with a filter are compared.
 
-Depending on the types and numbers of the involved timeseries, the calculation can be:
+Depending on the types and numbers of the involved timeseries (defined as the HTTP GET arguments), the calculation can be of one of among the following types:
 
-- *evaluation*: 1 observation x 1 model,
-- *comparison*: 1 model x 1 model,
-- *competition*: 1 observation x 2 or more models.
+1. *evaluation*: 1 observation x 1 model,
+2. *comparison*: 1 model x 1 model,
+3. *competition*: 1 observation x 2 or more models.
 
 Mandatory parameters:
 
-- **filter**:
-- **calc**: single string. E.g. "RMSE", "KGE", "Nash"
-- **parameterGroup**:
+- **filter**: single string. Filter Id
+- **calc**: single string. E.g. "RMSE", "KGE", "Nash", "PropBias"
+- **parameterGroup**: single string. A ParameterGroup id
 
-Optional parameters:
+Optional parameters\*:
 
-- **observationModuleInstanceId**: single string
-- **modelModuleInstanceId**: single string
-- **modelModuleInstanceIds**: multiple strings separated by commas
+- **observationModuleInstanceId<sup>1,3</sup>**: single string
+- **modelModuleInstanceId<sup>1</sup>**: single string
+- **modelModuleInstanceIds<sup>2,3</sup>**: multiple strings (separated by commas)
+
+\*: The superscripted number indicates the type of the calculation to which the optional argument is mandatory.
+
+Example<sup>1</sup>: ```http://.../v1dw/timeseries_calculator?filter=alpha&calc=KGE&parameterGroup=grp&observationModuleInstanceId=obsvA&modelModuleInstanceId=mdl```
+
+Example<sup>2</sup>: ```http://.../v1dw/timeseries_calculator?filter=alpha&calc=PropBias&parameterGroup=grp&modelModuleInstanceIds=mdlA,mdlB```
