@@ -117,7 +117,7 @@ Optional parameter:
 
 Example: ```https://.../v1dw/threshold_groups?filter=alpha```
 
-### http://.../v1dw/threshold_value_sets 
+### http://.../v1dw/threshold_value_sets
 
 List all sets of values for timeseries thresholds.
 
@@ -135,3 +135,27 @@ Each value set has an id and a value function (*valueFunction*). Value functions
 ### http://.../v1dw/module_instances
 
 List all module instances registered in the system.
+
+### http://.../v1dw/timeseries_calculator/
+
+Returns the results of a specified calculation involving two or more groups of timeseries.
+
+All timeseries associated with a filter are compared.
+
+Depending on the types and numbers of the involved timeseries, the calculation can be:
+
+- *evaluation*: 1 observation x 1 model,
+- *comparison*: 1 model x 1 model,
+- *competition*: 1 observation x 2 or more models.
+
+Mandatory parameters:
+
+- **filter**:
+- **calc**: single string. E.g. "RMSE", "KGE", "Nash"
+- **parameterGroup**:
+
+Optional parameters:
+
+- **observationModuleInstanceId**: single string
+- **modelModuleInstanceId**: single string
+- **modelModuleInstanceIds**: multiple strings separated by commas
