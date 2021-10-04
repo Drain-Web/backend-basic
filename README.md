@@ -18,20 +18,34 @@ The packages required by this project are described in the classical *requiremen
 
 It is highly recommended that you create a new python environment to work in your development. Multiple python package managers provide such a functionality.
 
-If you are using only **venv**, the steps for (1) creating a new environment named `backend-basic_fedora`, (2) entering the environment * and (3) installing the packages needed are:
+### Using VENV only
 
-    $ python -m venv backend-basic_fedora
-	$ source [folder_path]/venvs/backend-basic_fedora/bin/activate
-	(backend-basic_fedora) $ pip install -r requirements.txt
+If you are using only **venv**, the steps for (1) creating a new environment named `django_backend_3.8`, (2) entering the environment\* and (3) installing the packages needed are:
+
+    $ python -m venv django_backend_3.8
+	$ source [folder_path]/venvs/django_backend_3.8/bin/activate
+	(django_backend_3.8) $ pip install -r requirements.txt
 
 *: second step is given for Linux environments. Windows and Mac OS may have different command styles
 
-If you are using **conda** and **pip** on Linux, the same steps would be:
+### Using CONDA + PIP
 
-    $ conda create -n django_frontend_3.8 python=3.8
-    $ conda activate django_frontend_3.8
-    $ while read requirement; do conda install --yes $requirement; done < requirements.txt
-    $ pip install -r requirements.txt
+If you are using *conda* and *pip* on **Linux** and **Windows**, the following 4 commands are required:
+
+	? conda create -n django_backend_3.8 python=3.8
+    ? conda activate django_backend_3.8
+    [SYSTEM SPECIFIC COMMAND]
+    ? pip install -r requirements.txt
+
+As it says, the 3<sup>rd</sup> command is system specific.
+
+On **Linux**, ```[SYSTEM SPECIFIC COMMAND]``` is:
+
+	$ while read requirement; do conda install --yes $requirement; done < requirements.txt
+
+On **Windows** within a PowerShell terminal, ```[SYSTEM SPECIFIC COMMAND]``` is:
+
+	> ForEach ($req in Get-Content -Path requirements.txt) { conda install --yes $req }
 
 ## Activating local development server
 
