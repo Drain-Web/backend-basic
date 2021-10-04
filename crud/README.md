@@ -136,7 +136,27 @@ Each value set has an id and a value function (*valueFunction*). Value functions
 
 List all module instances registered in the system.
 
-### http://.../v1dw/timeseries_calculator/
+### http://.../v1dw/timeseries_calculator
+
+Returns the results of a specified calculation involving two or more timeseries.
+
+Depending on the involved timeseries (defined as the HTTP GET arguments), the calculation can be of one of among the following types:
+
+1. *evaluation*: 1 observation x 1 model,
+2. *comparison*: 1 model x 1 model,
+3. *competition*: 1 observation x 2 or more models.
+
+Mandatory parameter:
+
+- **calc**: single string. E.g. "RMSE", "KGE", "Nash", "PropBias"
+
+Optional parameters*:
+
+- **observationTimeseriesId<sup>1,3</sup>**: single integers
+- **modelTimeseriesId<sup>1</sup>**: single integers
+- **modelTimeseriesIds<sup>2,3</sup>**: multiple integers (separated by commas)
+
+### <s>http://.../v1dw/timeseries_calculator</s>
 
 Returns the results of a specified calculation involving two or more groups of timeseries.
 

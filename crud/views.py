@@ -15,6 +15,7 @@ from crud.serializers import ModuleInstanceSerializer, LevelThresholdSerializer
 from crud.serializers import ParameterGroupSerializer, ThresholdValueSetSerializer
 from rest_framework import status
 import crud.libs.views_lib as lib
+from crud.libs.views import timeseries_calculate as timeseries_calculate_lib
 from typing import List, Union
 
 import copy
@@ -179,7 +180,7 @@ def filter_list_by_querystring(request):
     return JsonResponse(ret_dict, safe=False)
 
 
-# ## PARAMETERS ###################################################################################################### #
+# ## PARAMETERS ############################################################################### #
 
 @api_view(['GET'])
 def list_parameters(request):
@@ -204,47 +205,100 @@ def list_parameter_groups(request):
     return JsonResponse(ret_dict, safe=False)
 
 
-# ## TIMESERIES ###################################################################################################### #
+# ## TIMESERIES ############################################################################### #
 
 @api_view(['GET'])
 def timeseries_list_by_querystring(request):
+    
+    # get parameters
     filter_id = request.GET.get('filter')
     location_id = request.GET.get('location')
     show_statistics = request.GET.get('showStatistics')
+    only_headers = request.GET.get('onlyHeaders')
 
-    # basic check - must provide a filter
-    if filter_id is None:
-        return JsonResponse({"message": "Filter ID not provided. Must be given as '?filter='."},
+    # set defaults
+    show_statistics = False if show_statistics is None else True
+    only_headers = False if only_headers is None else True
+
+    # define if the heavy field 'events' should be defered
+    defer_evts = True if (not show_statistics) or only_headers else False
+    ts_objs = Timeseries.objects.defer('events') if defer_evts else Timeseries.objects
+    del defer_evts
+
+    # define filter(s) to apply
+    if (filter_id is not None) and (location_id is None):
+        ts_objs = ts_objs.filter(filter_set__id__contains=filter_id)
+    elif (filter_id is not None) and (location_id is not None):
+        ts_objs = ts_objs.filter(filter_set__id__contains=filter_id, \
+            header_location_id=location_id)
+    elif (filter_id is None) and (location_id is not None):
+        ts_objs = ts_objs.filter(header_location_id=location_id)
+    else:
+        ts_objs = ts_objs.all()
+
+    # define serializer to use
+    if only_headers and (not show_statistics):
+        serializer = TimeseriesDatalessSerializer
+    elif only_headers and show_statistics:
+        serializer = TimeseriesDatalessStatisticsSerializer
+    elif (not only_headers) and show_statistics:
+        return JsonResponse({"message": "Unexpected 'show_statistics' with no 'only_headers'."},
+                            status=status.HTTP_400_BAD_REQUEST, safe=False)
+    else:
+        serializer = TimeseriesDatafullSerializer
+
+    # get data end JSONify it
+    serializer = serializer(ts_objs, many=True)
+    data = [] if (len(serializer.data) == 0) else serializer.data
+    return JsonResponse(data, safe=False)
+
+
+# ## TIMESERIES CALCULATOR #################################################################### #
+
+@api_view(['GET'])
+def timeseries_calculate(request):
+
+    # get parameters
+    filter_id = request.GET.get('filter')
+    calc = request.GET.get('calc')
+    parameter_group = request.GET.get('parameterGroup')
+    obsv_moduleInstId = request.GET.get('observationModuleInstanceId')
+    model_moduleInstId = request.GET.get('modelModuleInstanceId')
+    model_moduleInstIds = request.GET.get('modelModuleInstanceIds')
+
+    # split multstring parameters
+    model_moduleInstIds = None if model_moduleInstIds is None else model_moduleInstIds.split(",")
+
+    # checks inputs and gets the type of calculation 
+    calc_type, fail_mssg = timeseries_calculate_lib.get_calculation_type(filter_id, calc, 
+            parameter_group, obsv_moduleInstId, model_moduleInstId, model_moduleInstIds)
+    if fail_mssg is not None:
+        return JsonResponse({"message": fail_mssg}, safe=False,
                             status=status.HTTP_400_BAD_REQUEST)
-
-    # only returns the header of the timeseries
-    if location_id is None:
-        if (show_statistics is None) or (not show_statistics):
-            selected_timeseries = Timeseries.objects.defer('events').filter(filter_set__id__contains=filter_id)
-            timeseries_serializer = TimeseriesDatalessSerializer(selected_timeseries, many=True)
-        else:
-            selected_timeseries = Timeseries.objects.filter(filter_set__id__contains=filter_id)
-            timeseries_serializer = TimeseriesDatalessStatisticsSerializer(selected_timeseries, many=True)
-        if len(timeseries_serializer.data) == 0:
-            return JsonResponse([], safe=False)
-        return JsonResponse(timeseries_serializer.data, safe=False)
-
-    # return full content of the timeseries
-    if location_id is not None:
-        all_timeseries = Timeseries.objects.filter(filter_set__id__contains=filter_id,
-                                                   header_location_id=location_id)
-        timeseries_serializer = TimeseriesDatafullSerializer(all_timeseries, many=True)
-        return JsonResponse(timeseries_serializer.data, safe=False)
-
-    return JsonResponse({"message": "Unexpected query sting."}, status=status.HTTP_400_BAD_REQUEST, safe=False)
+    
+    # performs the calculation
+    data_mssg, fail_mssg = timeseries_calculate_lib.calculate(calc_type, filter_id, calc, 
+        parameter_group, obsv_moduleInstId, model_moduleInstId, model_moduleInstIds)
+    
+    # show output
+    if fail_mssg is not None:
+        return JsonResponse({"message": fail_mssg}, safe=False, 
+            status=status.HTTP_400_BAD_REQUEST)
+    else:
+        ret_dict = {
+            "version": API_VERSION,
+            "data": data_mssg
+        }
+        return JsonResponse(ret_dict, safe=False)
 
 
-# ## THRESHOLDS ##################################################################################################### #
+# ## THRESHOLDS ############################################################################### #
 
 @api_view(['GET'])
 def threshold_value_sets_list(request):
     all_threshold_value_sets = ThresholdValueSet.objects.all()
-    all_threshold_value_sets_serializer = ThresholdValueSetSerializer(all_threshold_value_sets, many=True)
+    all_threshold_value_sets_serializer = ThresholdValueSetSerializer(all_threshold_value_sets,
+                                                                      many=True)
     base_ret_dict = {
         "version": API_VERSION,
         "thresholdValueSets": all_threshold_value_sets_serializer.data
@@ -265,7 +319,8 @@ def threshold_groups_list(request):
     if filter_id is None:
         all_level_thresholds = LevelThreshold.objects.all()
         all_level_thresholds = LevelThresholdSerializer(all_level_thresholds, many=True).data
-        base_ret_dict["thresholdGroups"] = lib.threshold_groups_list_invert_levels(all_level_thresholds)
+        base_ret_dict["thresholdGroups"] = \
+            lib.threshold_groups_list_invert_levels(all_level_thresholds)
         return JsonResponse(base_ret_dict, safe=False)
     
     # if filter was provided, get all timeseries of this filter and map:
@@ -284,6 +339,8 @@ def threshold_groups_list(request):
 
     # with all Threshold Level IDs, retrieve the Threshold Groups
     selected_level_thresholds = LevelThreshold.objects.filter(id__in=level_threshold_ids)
-    selected_level_thresholds = LevelThresholdSerializer(selected_level_thresholds, many=True).data
-    base_ret_dict["thresholdGroups"] = lib.threshold_groups_list_invert_levels(selected_level_thresholds)
+    selected_level_thresholds = \
+        LevelThresholdSerializer(selected_level_thresholds, many=True).data
+    base_ret_dict["thresholdGroups"] = \
+        lib.threshold_groups_list_invert_levels(selected_level_thresholds)
     return JsonResponse(base_ret_dict, safe=False)
