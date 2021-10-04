@@ -138,26 +138,6 @@ List all module instances registered in the system.
 
 ### http://.../v1dw/timeseries_calculator
 
-Returns the results of a specified calculation involving two or more timeseries.
-
-Depending on the involved timeseries (defined as the HTTP GET arguments), the calculation can be of one of among the following types:
-
-1. *evaluation*: 1 observation x 1 model,
-2. *comparison*: 1 model x 1 model,
-3. *competition*: 1 observation x 2 or more models.
-
-Mandatory parameter:
-
-- **calc**: single string. E.g. "RMSE", "KGE", "Nash", "PropBias"
-
-Optional parameters*:
-
-- **observationTimeseriesId<sup>1,3</sup>**: single integers
-- **modelTimeseriesId<sup>1</sup>**: single integers
-- **modelTimeseriesIds<sup>2,3</sup>**: multiple integers (separated by commas)
-
-### <s>http://.../v1dw/timeseries_calculator</s>
-
 Returns the results of a specified calculation involving two or more groups of timeseries.
 
 All timeseries associated with a filter are compared.
@@ -172,16 +152,17 @@ Mandatory parameters:
 
 - **filter**: single string. Filter Id
 - **calc**: single string. E.g. "RMSE", "KGE", "Nash", "PropBias"
-- **parameterGroup**: single string. A ParameterGroup id
+- **modParameterId**: single string. The ParameterId for the model(s)
 
 Optional parameters\*:
 
-- **observationModuleInstanceId<sup>1,3</sup>**: single string
-- **modelModuleInstanceId<sup>1</sup>**: single string
-- **modelModuleInstanceIds<sup>2,3</sup>**: multiple strings (separated by commas)
+- **obsParameterId<sup>1,3</sup>**: single string. The ParameterId for the observation
+- **obsModuleInstanceId<sup>1,3</sup>**: single string
+- **modModuleInstanceId<sup>1</sup>**: single string
+- **modModuleInstanceIds<sup>2,3</sup>**: multiple strings (separated by commas)
 
 \*: The superscripted number indicates the type of the calculation to which the optional argument is mandatory.
 
-Example<sup>1</sup>: ```http://.../v1dw/timeseries_calculator?filter=alpha&calc=KGE&parameterGroup=grp&observationModuleInstanceId=obsvA&modelModuleInstanceId=mdl```
+Example<sup>1</sup>: ```http://.../v1dw/timeseries_calculator?filter=e2019mayMid.eer&calc=KGE&modParameterId=grp&obsParameterId=obsvA&obsModuleInstanceId=obs&modModuleInstanceId=mdl```
 
 Example<sup>2</sup>: ```http://.../v1dw/timeseries_calculator?filter=alpha&calc=PropBias&parameterGroup=grp&modelModuleInstanceIds=mdlA,mdlB```

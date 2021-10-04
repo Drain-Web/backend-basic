@@ -261,24 +261,25 @@ def timeseries_calculate(request):
     # get parameters
     filter_id = request.GET.get('filter')
     calc = request.GET.get('calc')
-    parameter_group = request.GET.get('parameterGroup')
-    obsv_moduleInstId = request.GET.get('observationModuleInstanceId')
-    model_moduleInstId = request.GET.get('modelModuleInstanceId')
-    model_moduleInstIds = request.GET.get('modelModuleInstanceIds')
+    mod_param_id = request.GET.get('modParameterId')
+    obs_param_id = request.GET.get('obsParameterId')
+    obs_moduleInstId  = request.GET.get('obsModuleInstanceId')
+    mod_moduleInstId  = request.GET.get('modModuleInstanceId')
+    mod_moduleInstIds = request.GET.get('modModuleInstanceIds')
 
     # split multstring parameters
-    model_moduleInstIds = None if model_moduleInstIds is None else model_moduleInstIds.split(",")
+    model_moduleInstIds = None if mod_moduleInstIds is None else mod_moduleInstIds.split(",")
 
     # checks inputs and gets the type of calculation 
     calc_type, fail_mssg = timeseries_calculate_lib.get_calculation_type(filter_id, calc, 
-            parameter_group, obsv_moduleInstId, model_moduleInstId, model_moduleInstIds)
+            obs_param_id, mod_param_id, obs_moduleInstId, mod_moduleInstId, model_moduleInstIds)
     if fail_mssg is not None:
         return JsonResponse({"message": fail_mssg}, safe=False,
                             status=status.HTTP_400_BAD_REQUEST)
     
     # performs the calculation
     data_mssg, fail_mssg = timeseries_calculate_lib.calculate(calc_type, filter_id, calc, 
-        parameter_group, obsv_moduleInstId, model_moduleInstId, model_moduleInstIds)
+        obs_param_id, mod_param_id, obs_moduleInstId, mod_moduleInstId, model_moduleInstIds)
     
     # show output
     if fail_mssg is not None:
@@ -287,7 +288,7 @@ def timeseries_calculate(request):
     else:
         ret_dict = {
             "version": API_VERSION,
-            "data": data_mssg
+            calc_type: data_mssg
         }
         return JsonResponse(ret_dict, safe=False)
 
