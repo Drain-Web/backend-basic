@@ -1,0 +1,12 @@
+{
+	"input_folder": "crud/fixtures/crud_fixture_timeseries/q",
+	"input_filename_regex": "Q_.{8}-.*.json",
+	"disturbance": {
+		"events_multiplication_range": [1.15, 1.40],
+		"module_instance_id": "Dist115t140USGSobs",
+		"station_name": null,
+		"parameterId": "Q.sim",
+		"output_file_tag": null
+	},
+	"output_folder": "crud/fixtures/crud_fixture_timeseries/q_d115t140USGSobs"
+}
