@@ -22,8 +22,8 @@ It is highly recommended that you create a new python environment to work in you
 
 If you are using only **venv**, the steps for (1) creating a new environment named `django_backend_3.8`, (2) entering the environment\* and (3) installing the packages needed are:
 
-    $ python -m venv django_backend_3.8
-	$ source [folder_path]/venvs/django_backend_3.8/bin/activate
+    ? python -m venv django_backend_3.8
+	? source [folder_path]/venvs/django_backend_3.8/bin/activate
 	(django_backend_3.8) $ pip install -r requirements.txt
 
 *: second step is given for Linux environments. Windows and Mac OS may have different command styles
@@ -51,16 +51,18 @@ On **Windows** within a PowerShell terminal, ```[SYSTEM SPECIFIC COMMAND]``` is:
 
 As a typical Django system, the command:
 
-    $ python .\manage.py runserver
+    ? python .\manage.py runserver
 
 starts a local server that can be accessed at ```http://127.0.0.1:8000/```.
 
 ## Deploying
 
+### Updating Database
+
 As a typical Django project, we need to run:
 
-	$ python manage.py makemigrations
-	$ python manage.py migrate
+	? python manage.py makemigrations
+	? python manage.py migrate
 
 To set up our database to match the designed models.
 
@@ -78,22 +80,58 @@ and, the line:
 
 is the file `api_rest/settings.py` so that the user `guest` (and its respective password) is changed to an user with writing permissions in the target database.
 
-### Error: Not implemented alter command for SQL ALTER TABLE "..." ...
+#### Error: Not implemented alter command for SQL ALTER TABLE "..." ...
 
 If you get this error after changing a *Collection* structure, try using the command:
 
-    $ python manage.py migrate --fake crud [migration_id]
+    ? python manage.py migrate --fake crud [migration_id]
 
 In which ```migration_id``` can be found in the aforementioned error message in:
 
     Running migrations:
      Applying crud.[migration_id]...
 
-
 ## Populating database
 
 Please refer to the *README.md* in *crud/fixtures/*.
 
+### Uploading API interface
+
+A Docker setup is available to update the running API on the server.
+
+#### Testing the Docker container locally
+
+To run the Docker locally for a project that will later be hosted at ```https://hydro-web.herokuapp.com/```, a Docker image must first be created with the command:
+
+    ? docker build -f Dockerfile -t registry.heroku.com/hydro-web/web .
+
+Once built, it can be run with:
+
+    ? docker run --name backend_api -e "PORT=8765" -e "DEBUG=1" -p 8007:8765 registry.heroku.com/hydro-web/web
+
+If everything is fine, the result can be accessed opening [http://0.0.0.0:8007/](http://0.0.0.0:8007/) in your browser.
+
+To stop the server its Docker container must be stopped/removed. In a new terminal, run the forced removal:
+
+    ? docker rm backend_api -f
+
+#### Pushing the Docker container to the server
+
+Set ```heroku``` to operate in *container runtime* with:
+
+    ? heroku container:login
+
+Push the image to the registry:
+
+    ? docker push registry.heroku.com/hydro-web/web
+
+Now it should be available at the website given in the beggining of this files.
+
+If it returns ```Error 404```, you may need to run:
+
+    ? heroku open -a hydro-web
+
+To start the stuff.
 
 ## About this development branch version
 

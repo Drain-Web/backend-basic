@@ -27,8 +27,7 @@ SECRET_KEY = 'django-insecure-+15i!61e9+(3xj=g9@)&q**vt#r$$6=gk4qcc6053q*9pva=j(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'hydro-web.herokuapp.com']
 
 # Application definition
 
@@ -74,18 +73,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'api_rest.wsgi.application'
-
-'''
-# commenting the code bellow solved the error "Cannot apply DjangoModelPermissionsOrAnonReadOnly on a view that does not set `.queryset` or have a `.get_queryset()` method."
-# TODO - review this
-REST_FRAMEWORK = {
-    # Use Django's standard `django.contrib.auth` permissions,
-    # or allow read-only access for unauthenticated users.
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
-    ]
-}
-'''
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
