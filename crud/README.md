@@ -145,24 +145,28 @@ All timeseries associated with a filter are compared.
 Depending on the types and numbers of the involved timeseries (defined as the HTTP GET arguments), the calculation can be of one of among the following types:
 
 1. *evaluation*: 1 observation x 1 model,
-2. *comparison*: 1 model x 1 model,
-3. *competition*: 1 observation x 2 or more models.
+2. *competition*: 1 observation x 2 or more models,
+3. *comparison*: 2 or more models.
 
 Mandatory parameters:
 
-- **filter**: single string. Filter Id
-- **calc**: single string. E.g. "RMSE", "KGE", "Nash", "PropBias"
-- **modParameterId**: single string. The ParameterId for the model(s)
+- **filter**: single string. Filter Id.
+- **calc**: single string. Valid values:
+    - **evaluation** / **competition**: "RMSE", "KGE",
+    - **comparison**: "PeakValue", "MeanValue".
+- **simParameterId**: single string. The ParameterId for the simulation(s).
 
 Optional parameters\*:
 
-- **obsParameterId<sup>1,3</sup>**: single string. The ParameterId for the observation
-- **obsModuleInstanceId<sup>1,3</sup>**: single string
-- **modModuleInstanceId<sup>1</sup>**: single string
-- **modModuleInstanceIds<sup>2,3</sup>**: multiple strings (separated by commas)
+- **obsParameterId<sup>1,3</sup>**: single string. The ParameterId for the observation.
+- **obsModuleInstanceId<sup>1,3</sup>**: single string.
+- **simModuleInstanceId<sup>1</sup>**: single string.
+- **simModuleInstanceIds<sup>2,3</sup>**: multiple strings (separated by commas).
 
 \*: The superscripted number indicates the type of the calculation to which the optional argument is mandatory.
 
-Example<sup>1</sup>: ```http://.../v1dw/timeseries_calculator?filter=e2019mayMid.eer&calc=KGE&modParameterId=grp&obsParameterId=obsvA&obsModuleInstanceId=obs&modModuleInstanceId=mdl```
+Example<sup>1</sup>: ```http://.../v1dw/timeseries_calculator?filter=e2019mayMid.eer&calc=KGE&simParameterId=grp&obsParameterId=obsvA&obsModuleInstanceId=obs&simModuleInstanceId=mdl```
 
-Example<sup>2</sup>: ```http://.../v1dw/timeseries_calculator?filter=alpha&calc=PropBias&parameterGroup=grp&modelModuleInstanceIds=mdlA,mdlB```
+Example<sup>2</sup>: ```http://.../v1dw/timeseries_calculator?filter=e2019mayMid.eer&calc=KGE&simParameterId=grp&obsParameterId=obsvA&obsModuleInstanceId=obs&simModuleInstanceId=mdlA,mdlB```
+
+Example<sup>3</sup>: ```http://.../v1dw/timeseries_calculator?filter=e2019mayMid.eer&calc=PeakValue&simParameterId=grp&simModuleInstanceIds=mdlA,mdlB```
