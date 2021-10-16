@@ -121,9 +121,10 @@ Set ```heroku``` to operate in *container runtime* with:
 
     ? heroku container:login
 
-Push the image to the registry:
+Push the image to the registry and release it:
 
     ? docker push registry.heroku.com/hydro-web/web
+    ? heroku container:release -a hydro-web web
 
 Now it should be available at the website given in the beggining of this files.
 
