@@ -252,7 +252,7 @@ def timeseries_list_by_querystring(request):
     elif only_headers and show_statistics:
         serializer = TimeseriesDatalessStatisticsSerializer
     elif (not only_headers) and show_statistics:
-        return JsonResponse({"message": "Unexpected 'show_statistics' with no 'only_headers'."},
+        return JsonResponse({"message": "Unexpected 'showStatistics' with no 'onlyHeaders'."},
                             status=status.HTTP_400_BAD_REQUEST, safe=False)
     else:
         serializer = TimeseriesDatafullSerializer
