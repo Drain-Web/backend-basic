@@ -155,7 +155,7 @@ Mandatory parameters:
 - **calc** (single string) or **calcs** (multiple strings separated by comma):
     - **evaluation** / **competition**: *calc* with "RMSE", "KGE",
     - **comparison**: *calc* with "PeakValue", "MeanValue",
-    - **matrix**: *calcs* with "RMSE,KGE".
+    - **evaluations**: *calcs* with "RMSE,KGE".
 - **simParameterId**: single string. The ParameterId for the simulation(s).
 
 Optional parameters\*:
@@ -164,7 +164,7 @@ Optional parameters\*:
 - **obsModuleInstanceId<sup>1,3</sup>**: single string.
 - **simModuleInstanceId<sup>1</sup>**: single string.
 - **simModuleInstanceIds<sup>2,3</sup>**: multiple strings (separated by commas).
-- ****: 
+- **locationId**: single string.
 
 \*: The superscripted number indicates the type of the calculation to which the optional argument is mandatory.
 
