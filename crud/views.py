@@ -271,24 +271,29 @@ def timeseries_calculate(request):
     # get parameters
     filter_id = request.GET.get('filter')
     calc = request.GET.get('calc')
+    calcs = request.GET.get('calcs')
     sim_param_id = request.GET.get('simParameterId')
     obs_param_id = request.GET.get('obsParameterId')
     obs_moduleInstId  = request.GET.get('obsModuleInstanceId')
     sim_moduleInstId  = request.GET.get('simModuleInstanceId')
     sim_moduleInstIds = request.GET.get('simModuleInstanceIds')
+    location_id = request.GET.get('locationId')
 
     # split multstring parameters
     model_moduleInstIds = None if sim_moduleInstIds is None else sim_moduleInstIds.split(",")
+    calcs = None if calcs is None else calcs.split(",")
 
     # checks inputs and gets the type of calculation 
-    calc_type, fail_mssg = timeseries_calculate_lib.get_calculation_type(filter_id, calc, 
-            obs_param_id, sim_param_id, obs_moduleInstId, sim_moduleInstId, model_moduleInstIds)
+    calc_type, fail_mssg = timeseries_calculate_lib.get_calculation_type(filter_id, calc, calcs,
+            obs_param_id, sim_param_id, obs_moduleInstId, sim_moduleInstId, model_moduleInstIds,
+            location_id)
     if fail_mssg is not None:
         return wrap_error(fail_mssg)
     
     # performs the calculation
-    data_mssg, fail_mssg = timeseries_calculate_lib.calculate(calc_type, filter_id, calc, 
-        obs_param_id, sim_param_id, obs_moduleInstId, sim_moduleInstId, model_moduleInstIds)
+    data_mssg, fail_mssg = timeseries_calculate_lib.calculate(calc_type, filter_id, calc, calcs,
+        obs_param_id, sim_param_id, obs_moduleInstId, sim_moduleInstId, model_moduleInstIds,
+        location_id)
     
     # show output
     return wrap_success({calc_type: data_mssg}) if fail_mssg is None else wrap_error(fail_mssg)

@@ -22,12 +22,16 @@ import math
 # Comparison peak
 # http://127.0.0.1:8000/v1dw/timeseries_calculator?filter=e2019mayMid.eer&calc=peak&modParameterId=Q.sim&obsParameterId=Q.obs&modModuleInstanceIds=ImportHLModelHist01,Dist050t065USGSobs
 
+# Evaluation matrix
+# http://127.0.0.1:8000/v1dw/timeseries_calculator?filter=e2019mayMid.eer&calcs=RMSE,KGE&simParameterId=Q.sim&obsParameterId=Q.obs&simModuleInstanceIds=ImportHLModelHist01,Dist050t065USGSobs&obsModuleInstanceId=ImportUSGSobs&locationId=usgs_06799000
+
 # ## CONS ##################################################################################### #
 
 class CalcTypes:
     eval = "evaluation"
     cmpr = "comparison"
     cmpt = "competition"
+    mtrx = "evaluations"
 
 CALCS = {}
 
@@ -98,7 +102,8 @@ def _group_timeseries_by_locations(all_timeseries: list, obs_parameter_id: str,
                                    obsv_moduleInstId: str, mod_parameter_id: str,
                                    model_moduleInstIds: set) -> dict:
     """
-    
+    Creates
+    :return: Dict with {'location_id': {'OBSV_TIMESERIES': 'timeseries_id', 'SIMU_TIMESERIES': {'sim_moduleId': 'timeseries_id'}}}}
     """
 
     ts_ids_by_location = {}
@@ -141,9 +146,16 @@ def _query_all_timeseries_by(locations: dict, keys: tuple, leveled: Union[set, N
         -> list:
     """
     
+    :param locations: dictionary with {'*any_key*': 'location_id'}
+    :param keys: Set with 'obs' and/or 'sim' used to constraint the search of timeseries
+    :param leveled: Set with 'obs' and/or 'sim' used to constraint the search of timeseries
+    :return: Result of MongoDB query
     """
 
+    # variable that will hold all timeseries IDs to be fully queried
     all_tss = []
+
+    # get all timeseries that 
     for cur_key in keys:
         if (leveled is not None) and (cur_key in leveled):
             for cur_loc in locations.values():
@@ -159,9 +171,21 @@ def _query_all_timeseries_by(locations: dict, keys: tuple, leveled: Union[set, N
     return all_tss
 
 
+def _query_all_timeseries_by_location(filter_id: str, location_id: str, obs_parameter_id: str,
+                                      ) \
+        -> list:
+    
+    all_tss = []
+
+    return all_tss
+
+
 def _remove_locs_without(locations: dict, needed_keys: tuple) -> None:
     """
-    
+    Remove the records of the 'locations' parameter that don't have one of the 'needed_keys' keys
+    :param locations: Dictionary with {'location_id': {'': ..., '': ...}}
+    :param needed_keys: 
+    :return: None. Changes are done inside the object of 'locations'.
     """
 
     all_locs_ids = list(locations.keys())
@@ -178,23 +202,26 @@ def _round_float(raw_value: float) -> None:
 # ## DEFS ##################################################################################### #
 
 
-def calculate(calc_type: str, filter_id: str, calc: str, obs_param_id: Union[str, None],
-              mod_param_id: str, obsv_moduleInstId: str, model_moduleInstId: str,
-              model_moduleInstIds: Union[list, None]) -> \
-                  Tuple[Union[str, None], Union[str, None]]:
+def calculate(calc_type: str, filter_id: str, calc: str, calcs: Union[list, None],
+              obs_param_id: Union[str, None], sim_param_id: str, obsv_moduleInstId: str, 
+              sim_moduleInstId: str, sim_moduleInstIds: Union[list, None],
+              locationId: Union[str, None]) -> Tuple[Union[str, None], Union[str, None]]:
     """
 
     :return: Two strings. Success message / None; Error message / None
     """
 
     if calc_type == CalcTypes.eval:
-        return calculate_evals(filter_id, calc, obs_param_id, mod_param_id, obsv_moduleInstId,
-            model_moduleInstId)
+        return calculate_evals(filter_id, calc, obs_param_id, sim_param_id, obsv_moduleInstId,
+            sim_moduleInstId)
     elif calc_type == CalcTypes.cmpr:
-        return calculate_cmpr(filter_id, calc, mod_param_id, model_moduleInstIds)
+        return calculate_cmpr(filter_id, calc, sim_param_id, sim_moduleInstIds)
     elif calc_type == CalcTypes.cmpt:
-        return calculate_cmpts(filter_id, calc, obs_param_id, mod_param_id, obsv_moduleInstId,
-            model_moduleInstIds)
+        return calculate_cmpts(filter_id, calc, obs_param_id, sim_param_id, obsv_moduleInstId,
+            sim_moduleInstIds)
+    elif calc_type == CalcTypes.mtrx:
+        return calculate_mtrx(filter_id, calcs, obs_param_id, sim_param_id, obsv_moduleInstId,
+            sim_moduleInstIds, locationId)
     else:
         return None, "Not implemented yet"
 
@@ -272,8 +299,8 @@ def calculate_cmpr(filter_id: str, calc: str, mod_parameter_id: str, model_modul
 
 
 def calculate_cmpts(filter_id: str, calc: str, obs_parameter_id: str, mod_parameter_id: str,
-                   obsv_moduleInstId: str, model_moduleInstIds: set) -> \
-                       Tuple[Union[str, None], Union[str, None]]:
+                    obsv_moduleInstId: str, model_moduleInstIds: set) -> \
+                        Tuple[Union[str, None], Union[str, None]]:
     """
     Performs the competition between multiple modules
     :return:
@@ -300,7 +327,7 @@ def calculate_cmpts(filter_id: str, calc: str, obs_parameter_id: str, mod_parame
         cur_obs_ts = all_tss[cur_dict[OBSV_TIMESERIES]]
         cur_sim_tss = ts_ids_by_location[cur_loc_id][SIMU_TIMESERIES]
 
-        # calculate module instance by module instance
+        # calculate module instance by module instancef
         for _, cur_sim_dict in cur_sim_tss.items():
             cur_sim_ts = all_tss[cur_sim_dict["timeseriesId"]]
             calc_value = CALCS[calc]["function"](cur_obs_ts["events"], cur_sim_ts["events"])
@@ -312,6 +339,39 @@ def calculate_cmpts(filter_id: str, calc: str, obs_parameter_id: str, mod_parame
     return {"metric": calc, "locations": ts_ids_by_location}, None
 
 
+def calculate_mtrx(filter_id: str, calcs: list, obs_parameter_id: str, sim_parameter_id: str,
+                   obs_moduleInstId: str, sim_moduleInstIds: set, location_id: str) -> \
+                       Tuple[Union[str, None], Union[str, None]]:
+    """
+    """
+
+    all_moduleInstanceIds = set([obs_moduleInstId, ] + list(sim_moduleInstIds))
+
+    # get all timeseries within the contraints
+    ts_objs = Timeseries.objects.filter(filter_set__id__contains=filter_id,
+        header_location_id=location_id, header_moduleInstanceId__in=all_moduleInstanceIds,
+        header_parameterId__in=(obs_parameter_id, sim_parameter_id))
+    ts_objs = TimeseriesDatafullSerializer(ts_objs, many=True).data
+
+    # identify observation timeseries
+    obs_ts = None
+    for cur_ts_i in range(len(ts_objs), 0, -1):
+        if ts_objs[cur_ts_i-1]["header"]["parameterId"] == obs_parameter_id:
+            obs_ts = ts_objs.pop(cur_ts_i-1)
+
+    # calculate metric by metric, pair of obs/sim by pair of obs/sim
+    ret_dict = {}
+    for cur_calc in calcs:
+        ret_dict[cur_calc] = {}
+        for cur_sim_ts in ts_objs:
+            calc_value = CALCS[cur_calc]["function"](obs_ts["events"], cur_sim_ts["events"])
+            ret_dict[cur_calc][cur_sim_ts["header"]["moduleInstanceId"]] = calc_value
+            del cur_sim_ts
+        del cur_calc
+
+    return ret_dict, None
+
+
 def convert_events_to_series(timeseries_events: list) -> pd.Series:
     dts = ["%s %s" % (v["date"], v["time"]) for v in timeseries_events]
     val = [v["value"] for v in timeseries_events]
@@ -319,36 +379,52 @@ def convert_events_to_series(timeseries_events: list) -> pd.Series:
     return ret_sr
 
 
-def get_calculation_type(filter_id: str, calc: str, obs_param_id: Union[str, None],
-                         mod_param_id: str, obsv_moduleInstId: str, model_moduleInstId: str,
-                         model_moduleInstIds: Union[list, None]) -> \
-                         Tuple[Union[str, None], Union[str, None]]:
+def get_calculation_type(filter_id: str, calc: Union[str, None], calcs: Union[list, None],
+                         obs_param_id: Union[str, None], mod_param_id: str,
+                         obsv_moduleInstId: str, model_moduleInstId: str,
+                         model_moduleInstIds: Union[list, None],
+                         location_id: Union[str, None]) -> Tuple[Union[str, None],
+                                                                 Union[str, None]]:
     """
     Checks the consistency of the arguments and identify what to do.
     :return: 
     """
     
     # check if mandatory arguments were given
-    for curv, curn in ((filter_id, "filter"), (calc, "calc"), (mod_param_id, "modParameterId")):
+    for curv, curn in ((filter_id, "filter"), (mod_param_id, "simParameterId")):
         if curv is None:
             return None, "Missing mandatory argument '%s'." % curn
+    if (calc is None) and (calcs is None):
+        return None, "Missing one of 'calc' or 'calcs' arguments."
+    elif (calc is not None) and (calcs is not None):
+        return None, "Only one argument of 'calc' and 'calcs' should be given.'%s'." % curn
 
     # check if 'calc' exists and get its value
-    if calc not in CALCS:
+    if (calc is not None) and (calc not in CALCS):
         return None, "Unexpected value for 'calc': '%s'." % calc
-    calc_dict = CALCS[calc]
+
+    # check if 'calc' matches
+    # calc_dict = CALCS[calc]
 
     # try to identify the type of the calculation from the arguments given
-    if (obsv_moduleInstId is not None) and (obs_param_id is not None):
-        if (model_moduleInstId is not None) and (model_moduleInstIds is None):
-            return CalcTypes.eval, None
-        elif (model_moduleInstId is None) and (model_moduleInstIds is not None):
-            return CalcTypes.cmpt, None
-    elif (model_moduleInstIds is not None) and (len(model_moduleInstIds) > 1):
-        if model_moduleInstId is None:
-            return CalcTypes.cmpr, None
+    if location_id is not None:
+
+        # 
+        if (model_moduleInstIds is not None) and (obsv_moduleInstId is not None):
+            return CalcTypes.mtrx, None
+
+    else:
+        # not a single location was not given - calculate all locations
+        if (obsv_moduleInstId is not None) and (obs_param_id is not None):
+            if (model_moduleInstId is not None) and (model_moduleInstIds is None):
+                return CalcTypes.eval, None
+            elif (model_moduleInstId is None) and (model_moduleInstIds is not None):
+                return CalcTypes.cmpt, None
+        elif (model_moduleInstIds is not None) and (len(model_moduleInstIds) > 1):
+            if model_moduleInstId is None:
+                return CalcTypes.cmpr, None
     
-    return None, "Unable to define the type of calculation from the set of arguments."
+    return None, "Unable to define the type of calculation from the set of arguments. model_moduleInstId is None?: {0}. model_moduleInstIds is None? {1}".format(model_moduleInstId is None, model_moduleInstIds is None)
 
 
 def get_timeseries_by_id(time_series_ids: list):

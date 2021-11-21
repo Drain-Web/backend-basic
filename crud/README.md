@@ -140,20 +140,22 @@ List all module instances registered in the system.
 
 Returns the results of a specified calculation involving two or more groups of timeseries.
 
-All timeseries associated with a filter are compared.
+All timeseries associated with a filter (and possibly with a location) are compared.
 
 Depending on the types and numbers of the involved timeseries (defined as the HTTP GET arguments), the calculation can be of one of among the following types:
 
 1. *evaluation*: 1 observation x 1 model,
 2. *competition*: 1 observation x 2 or more models,
-3. *comparison*: 2 or more models.
+3. *evaluations*: 1 observation x 2 or more models, specific location,
+4. *comparison*: 2 or more models.
 
 Mandatory parameters:
 
 - **filter**: single string. Filter Id.
-- **calc**: single string. Valid values:
-    - **evaluation** / **competition**: "RMSE", "KGE",
-    - **comparison**: "PeakValue", "MeanValue".
+- **calc** (single string) or **calcs** (multiple strings separated by comma):
+    - **evaluation** / **competition**: *calc* with "RMSE", "KGE",
+    - **comparison**: *calc* with "PeakValue", "MeanValue",
+    - **matrix**: *calcs* with "RMSE,KGE".
 - **simParameterId**: single string. The ParameterId for the simulation(s).
 
 Optional parameters\*:
@@ -162,11 +164,14 @@ Optional parameters\*:
 - **obsModuleInstanceId<sup>1,3</sup>**: single string.
 - **simModuleInstanceId<sup>1</sup>**: single string.
 - **simModuleInstanceIds<sup>2,3</sup>**: multiple strings (separated by commas).
+- ****: 
 
 \*: The superscripted number indicates the type of the calculation to which the optional argument is mandatory.
 
 Example<sup>1</sup>: ```http://.../v1dw/timeseries_calculator?filter=e2019mayMid.eer&calc=KGE&simParameterId=grp&obsParameterId=obsvA&obsModuleInstanceId=obs&simModuleInstanceId=mdl```
 
-Example<sup>2</sup>: ```http://.../v1dw/timeseries_calculator?filter=e2019mayMid.eer&calc=KGE&simParameterId=grp&obsParameterId=obsvA&obsModuleInstanceId=obs&simModuleInstanceId=mdlA,mdlB```
+Example<sup>2</sup>: ```http://.../v1dw/timeseries_calculator?filter=e2019mayMid.eer&calcs=RMSE,KGE&simParameterId=Q.sim&obsParameterId=Q.obs&simModuleInstanceIds=ImportHLModelHist01,Dist050t065USGSobs&obsModuleInstanceId=ImportUSGSobs&locationId=usgs_06799000```
 
-Example<sup>3</sup>: ```http://.../v1dw/timeseries_calculator?filter=e2019mayMid.eer&calc=PeakValue&simParameterId=grp&simModuleInstanceIds=mdlA,mdlB```
+Example<sup>3</sup>: ```http://.../v1dw/timeseries_calculator?filter=e2019mayMid.eer&calc=KGE&simParameterId=grp&obsParameterId=obsvA&obsModuleInstanceId=obs&simModuleInstanceId=mdlA,mdlB```
+
+Example<sup>4</sup>: ```http://.../v1dw/timeseries_calculator?filter=e2019mayMid.eer&calc=PeakValue&simParameterId=grp&simModuleInstanceIds=mdlA,mdlB```
