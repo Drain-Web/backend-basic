@@ -22,12 +22,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-+15i!61e9+(3xj=g9@)&q**vt#r$$6=gk4qcc6053q*9pva=j('
+SECRET_KEY = '<SECURITY_KEY>'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'hydro-web.herokuapp.com']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '<WEB_INTERFACE_ADDRESS>']
 
 # Application definition
 
@@ -80,11 +80,11 @@ WSGI_APPLICATION = 'api_rest.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'djongo',
-        'NAME': 'missouriRiverTributariesDB'
+        'NAME': '<DB_NAME>'
     }
 }
 # MongoClient.HOST = "mongodb+srv://guest:noPass@cluster0.4kqxi.mongodb.net/"
-MongoClient.HOST = "mongodb+srv://adlz:LuigiMario@cluster0.4kqxi.mongodb.net/"
+MongoClient.HOST = "mongodb+srv://<USER_NAME>:<USER_PASS>@<DB_CLUSTER_ADDRESS>/"
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
