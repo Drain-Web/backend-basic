@@ -139,7 +139,9 @@ class Filter(models.Model):
 
 
 class LocationSet(models.Model):
-    name = models.CharField(max_length=70, default='')
+    id = models.CharField(max_length=100, primary_key=True)
+    description = models.CharField(max_length=70, default='')
+    locations = models.ManyToManyField(Location)
 
 
 class ModuleInstance(models.Model):

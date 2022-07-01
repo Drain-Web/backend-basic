@@ -2,7 +2,7 @@ from rest_framework import serializers
 from crud.models import Boundary, DatetimeDefinition, Filter, Location, Map, ParameterGroup, Region, SystemInformation
 from crud.models import Timeseries, TimeseriesEvent, TimeseriesTimestep, TimeseriesParameter, LocationRelation
 from crud.models import ThresholdGroup, ThresholdValueSet, LevelThreshold, LevelThresholdValue, ThresholdWarningLevel
-from crud.models import LocationAttribute, ModuleInstance
+from crud.models import LocationAttribute, ModuleInstance, LocationSet
 
 
 # ## GENERAL ######################################################################################################### #
@@ -48,6 +48,21 @@ class LocationSerializer(serializers.ModelSerializer):
 
     def get_location_name(self, obj):
         return obj.name
+
+
+class LocationSetSerializer(serializers.ModelSerializer):
+    locationSetId = serializers.SerializerMethodField('get_locationset_id')
+    description = serializers.SerializerMethodField('get_description')
+
+    class Meta:
+        model = LocationSet
+        fields = ('locationSetId', 'description', 'locations')
+
+    def get_locationset_id(self, obj):
+        return obj.id
+      
+    def get_description(self, obj):
+        return obj.description
 
 
 class LocationAttributeSerializer(serializers.ModelSerializer):

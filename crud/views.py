@@ -1,6 +1,6 @@
 from django.shortcuts import render
 
-from crud.models import Boundary, Filter, Location, Map, Region, Timeseries, TimeseriesParameter
+from crud.models import Boundary, Filter, Location, LocationSet, Map, Region, Timeseries, TimeseriesParameter
 from crud.models import ThresholdValueSet, LevelThreshold, ModuleInstance, ParameterGroup
 
 from rest_framework.decorators import api_view
@@ -12,7 +12,7 @@ from crud.serializers import TimeseriesDatalessSerializer, TimeseriesDatalessSta
 from crud.serializers import TimeseriesWithFiltersSerializer, TimeseriesParameterSerializer
 from crud.serializers import FilterListItemSerializer, MapSerializer, RegionSerializer
 from crud.serializers import ModuleInstanceSerializer, LevelThresholdSerializer
-from crud.serializers import ParameterGroupSerializer, ThresholdValueSetSerializer
+from crud.serializers import ParameterGroupSerializer, ThresholdValueSetSerializer, LocationSetSerializer
 from rest_framework import status
 import crud.libs.views_lib as lib
 from crud.libs.views import timeseries_calculate as timeseries_calculate_lib
@@ -74,6 +74,22 @@ def region(request):
     region_obj = Region.objects.first()
     region_serializer = RegionSerializer(region_obj, many=False)
     return JsonResponse(region_serializer.data, safe=False)
+
+
+# ## LOCATION SETS ################################################################################################### #
+
+@api_view(['GET'])
+def location_set(request):
+    locSets = LocationSet.objects.all()
+
+    loc_sets_serializer = LocationSetSerializer(locSets, many=True)
+
+    ret_dict = {
+        "version": API_VERSION,
+        "locationSets": loc_sets_serializer.data
+    }
+
+    return JsonResponse(ret_dict, safe=False)
 
 
 # ## LOCATIONS ####################################################################################################### #
