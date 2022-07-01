@@ -40,7 +40,8 @@ router.register(r'users', UserViewSet)
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
-    url(r'^', include('crud.urls'))
+    url(r'^', include('crud.urls')),
+    url(r'^', include('protobufs_server.urls'))
 ]
 # ## path('', include(router.urls)),
 # ## path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),

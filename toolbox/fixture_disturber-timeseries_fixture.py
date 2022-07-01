@@ -1,3 +1,4 @@
+from typing import Union
 import argparse
 import datetime
 import random
@@ -9,7 +10,11 @@ import re
 
 # ## DEFS ############################################################################### #
 
-def disturb_file_content(content: dict, disturbance: dict) -> None:
+"""
+Modifies the content of the input directory 'content'.
+"""
+def disturb_file_content(content: dict, disturbance: dict,
+                         id_shift: Union[dict, None] = None) -> None:
     fields = content[0]["fields"]
 
     # update metadata
@@ -24,11 +29,21 @@ def disturb_file_content(content: dict, disturbance: dict) -> None:
         cur_event["value"] = "%.02f" % (float(cur_event["value"]) * cur_random)
         del cur_event, cur_random
 
+    # shift ID if needed
+    if id_shift is not None:
+        cur_id_value = fields[id_shift["id_field"]]
+        fields[id_shift["id_field"]] = cur_id_value + id_shift["shift_value"]
+        print("Shifted id of %s from %d to %d" % (fields["header_location"], cur_id_value, fields[id_shift["id_field"]]))
+        del cur_id_value
+    else:
+        print("Not shifted id of %s." % fields["header_location"])
+
     return None
 
 
 def disturb_files(input_folder_path: str, input_file_names: list, 
-                  disturbance: dict, output_folder_path: str) -> None:
+                  disturbance: dict, output_folder_path: str,
+                  id_shift: Union[dict, None] = None) -> None:
 
     if not os.path.exists(output_folder_path):
         os.mkdir(output_folder_path)
@@ -44,7 +59,7 @@ def disturb_files(input_folder_path: str, input_file_names: list,
         del input_file_path
 
         # disturb
-        disturb_file_content(file_content, disturbance)
+        disturb_file_content(file_content, disturbance, id_shift=id_shift)
 
         # define output file path
         if disturbance["output_file_tag"] is not None:
@@ -118,6 +133,7 @@ if __name__ == "__main__":
     _input_folder_path = _args_dict["input_folder"]
     _input_filename_regex = _args_dict["input_filename_regex"]
     _disturbance = _args_dict["disturbance"]
+    _id_shift = _args_dict["id_shift"] if "id_shift" in _args_dict else None
     _output_folder_path = _args_dict["output_folder"]
     del _args_dict
 
@@ -126,6 +142,6 @@ if __name__ == "__main__":
 
     # disturb and save output files
     disturb_files(_input_folder_path, _selected_file_names, _disturbance,
-                  _output_folder_path)
+                  _output_folder_path, id_shift=_id_shift)
 
     print("Finished (%d seconds)." % (datetime.datetime.now() - _ini_time).total_seconds())

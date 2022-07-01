@@ -2,7 +2,11 @@ api_rest/__pycache__/*
 crud/__pycache__/*
 crud/migrations/__pycache__/*
 crud/libs/__pycache__/*
+crud/libs/views/__pycache__/*
 crud/fixtures/crud_fixtureAuto_*
 crud/fixtures/crud_prefixture_*
+protobufs_server/__pycache__/*
+protobufs_server/file_tiles/*
+!protobufs_server/file_tiles/README.md
 toolbox/fixture_converter-timeseries_csv/input/time_series/full_sets/*
 .env

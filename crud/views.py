@@ -16,9 +16,7 @@ from crud.serializers import ParameterGroupSerializer, ThresholdValueSetSerializ
 from rest_framework import status
 import crud.libs.views_lib as lib
 from crud.libs.views import timeseries_calculate as timeseries_calculate_lib
-from typing import List, Union
-
-import copy
+from typing import Union
 
 # ## CONSTANTS ####################################################################################################### #
 

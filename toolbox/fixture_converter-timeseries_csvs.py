@@ -141,7 +141,7 @@ def convert_one_csv_file(inp_fipa: str, out_fdpa: str, global_attr: dict,
             cur_evt_df = inp_df[(inp_df.index >= cur_min_dt) &
                                 (inp_df.index <= cur_max_dt)].copy()
             if cur_evt_df.shape[0] == 0:
-                print(" No records for event ''")
+                print(" No records for event '%s' in file '%s'." % (evt_id, base_filename))
                 continue
 
             print(" Got a DF with shape {0} for event '{1}', station '{2}'.".format(
