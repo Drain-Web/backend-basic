@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'crud.apps.CrudConfig',
+    'netflow_server.apps.NetflowServerConfig',
     'protobufs_server.apps.ProtobufServerConfig',
     'rest_framework',
     'corsheaders'
