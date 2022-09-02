@@ -42,6 +42,7 @@ router.register(r'users', UserViewSet)
 urlpatterns = [
     url(r'^', include('crud.urls')),
     url(r'^', include('protobufs_server.urls')),
+    url(r'^', include('multitiles_server.urls')),
     url(r'^', include('netflow_server.urls'))
 ]
 # ## path('', include(router.urls)),
