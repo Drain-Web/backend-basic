@@ -70,6 +70,27 @@ Example of use:
      -output_filepath toolbox/geojson_precision_reducer/output/polygon_general_simplified1000m_M_WGS84.geojson
      -decimal_places 3
 
+### convert_tif_to_png
+
+Given a folder with ```N``` files [```f_1.tif```, ```f_2.tif```, ..., ```f_N.tif```], creates ```2*N``` files [```f_1.png```, ```f_2.png```, ..., ```f_N.png```] and their respective files [```f_1.json```, ```f_2.json```, ..., ```f_N.json```] in an output folder.
+
+Example of use:
+
+    python toolbox/convert_tif_to_png.py
+	 -input_path some_where/folder_with_tif_files/
+	 -output_folder_path some_where/folder_with_png_files/
+
+### convert_png_to_multitiles
+
+Expected to be used just after ```convert_tif_to_png.py```.
+
+Given a folder with ```2*N``` files [```f_1.png```, ```f_2.png```, ..., ```f_N.png```] and their respective files [```f_1.json```, ```f_2.json```, ..., ```f_N.json```], ```N``` folders with multitiles are created in an output folder.
+
+Example of use:
+
+    python convert_png_to_multitiles.py 
+	 -input_path_png some_where/folder_with_png_files/
+	 -output_folder_path some_where/folder_to_receive_multitiles/
 
 ## Expected sequence of calls
 
