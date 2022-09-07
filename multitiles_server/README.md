@@ -37,15 +37,15 @@ $ gdal_translate -of VRT \\
 And then use:
 
 ```
-$ gdal2tiles.py -p geodetic <META_VRT>
+$ gdal2tiles.py -p mercator -w none --xyz --no-kml <META_VRT> <OUTPUT_FOlDER>
 ```
 
-It will generate the folder with the same basename (i.e., without the file extension) of ```<META_VRT>```.
+It will generate the folder with the basename ```<OUTPUT_FOlDER>```.
 
 E.g.:
 
 ```
 $ gdal_translate -of VRT -a_srs EPSG:4326 -gcp 0 0 -79.374 43.688 -gcp 802 0 -79.355 43.688 -gcp 802 1000 -79.355 43.666 20130708_2030_rain.png 20130708_2030_rain.vrt
-$ gdal2tiles.py -p geodetic 20130708_2030_rain.vrt
-$ cd 20130708_2030_rain/
+$ gdal2tiles.py -p mercator -w none --xyz --no-kml 20130708_2030_rain.vrt out_fd/
+$ cd out_fd/
 ```

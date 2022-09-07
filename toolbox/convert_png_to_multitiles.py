@@ -87,6 +87,8 @@ def _create_vrf_file(png_file_path: str, metainfo_file_path: str) -> str:
                  img_w, max_lon, max_lat,
                  img_w, img_h, max_lon, min_lat,
                  png_file_path, vrt_file_path)
+    
+    # print(" cmd:", cmd)
 
     # run gdal command and handle success/failure
     result = subprocess.run(cmd, stdout=subprocess.PIPE, shell=True)
@@ -112,7 +114,7 @@ def _create_multitiles_files(vrf_file_path: str, out_base_folder_path: str) -> N
     out_folder_path = os.path.join(out_base_folder_path, base_file_path)
 
     # create multitiles out of vrt
-    cmd = "gdal2tiles.py -p geodetic --no-kml %s %s" % (vrf_file_path, out_folder_path)
+    cmd = "gdal2tiles.py -p mercator -w none --xyz --no-kml %s %s" % (vrf_file_path, out_folder_path)
     result = str(subprocess.run(cmd, stdout=subprocess.PIPE, shell=True))
 
     # result check
